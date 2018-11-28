@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  date_of_birth: 2018-11-29
+  relation_status: 1
+  gender: 1
+  person: one
+  address: MyString
+  profession: MyString
+
+two:
+  date_of_birth: 2018-11-29
+  relation_status: 1
+  gender: 1
+  person: two
+  address: MyString
+  profession: MyString
