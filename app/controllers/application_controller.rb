@@ -24,7 +24,8 @@ class ApplicationController < ActionController::API
     def set_pagination
       @size = params.has_key?(:size) ? params[:size].to_i : 25
       @page = params.has_key?(:page) ? params[:page].to_i : 1
-      @sort = params.has_key?(:sort) ? params[:sort] : "updated_at"
+      @order = params.has_key?(:order) ? params[:order] : "updated_at"
+      @sort = params.has_key?(:sort) ? params[:sort] : "DESC"
       @offset = (@page-1) * @size
     end
 

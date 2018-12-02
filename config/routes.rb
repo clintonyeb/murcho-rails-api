@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  resources :person_profiles
-  resources :people
   namespace :v1 do
     
     # Concerns
@@ -13,6 +11,13 @@ Rails.application.routes.draw do
     # Resources
     resources :churches
     resources :users
+    resources :person_profiles
+    resources :people
   
+    # Custom routes
+    post 'authentication', to: 'authentication#create'
+    post 'get_user_info', to: 'users#get_user_info'
+
+    get 'total_people', to: 'people#total_people'
   end
 end

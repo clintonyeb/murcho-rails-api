@@ -1,4 +1,4 @@
-class PersonProfilesController < ApplicationController
+class V1::PersonProfilesController < V1::BaseController
   before_action :set_person_profile, only: [:show, :update, :destroy]
 
   # GET /person_profiles

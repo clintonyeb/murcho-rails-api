@@ -1,11 +1,16 @@
-class PeopleController < ApplicationController
+class V1::PeopleController < V1::BaseController
   before_action :set_person, only: [:show, :update, :destroy]
+  before_action :set_pagination, only: [:index]
 
   # GET /people
   def index
-    @people = Person.all
-
+    @people = Person.where(church_id: @current_user.church_id).offset(@offset).limit(@size).order("#{@order} #{@sort}")
     render json: @people
+  end
+
+  def total_people
+    count = Person.where(church_id: @current_user.church_id).count
+    render json: count
   end
 
   # GET /people/1
