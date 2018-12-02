@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_11_28_184950) do
+ActiveRecord::Schema.define(version: 2018_12_02_064544) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -21,6 +21,12 @@ ActiveRecord::Schema.define(version: 2018_11_28_184950) do
     t.string "photo"
     t.string "motto"
     t.boolean "trash", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "groups", force: :cascade do |t|
+    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -38,6 +44,15 @@ ActiveRecord::Schema.define(version: 2018_11_28_184950) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["church_id"], name: "index_people_on_church_id"
+  end
+
+  create_table "person_groups", force: :cascade do |t|
+    t.bigint "person_id"
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_person_groups_on_group_id"
+    t.index ["person_id"], name: "index_person_groups_on_person_id"
   end
 
   create_table "person_profiles", force: :cascade do |t|
@@ -67,5 +82,7 @@ ActiveRecord::Schema.define(version: 2018_11_28_184950) do
   end
 
   add_foreign_key "people", "churches"
+  add_foreign_key "person_groups", "groups"
+  add_foreign_key "person_groups", "people"
   add_foreign_key "person_profiles", "people"
 end
