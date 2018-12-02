@@ -27,3 +27,11 @@ user = User.create({
 		date_joined: Time.now 
   })
 end
+
+10.times do
+  group = Group.create({
+		church_id: church.id,
+		name: Faker::TvShows::Community.characters,
+		description: Faker::TvShows::Community.quotes
+  })
+end

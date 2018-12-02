@@ -7,7 +7,6 @@ Rails.application.routes.draw do
     resources :users
     resources :person_profiles
     resources :people
-    resources :person_groups
     resources :groups
 
     # Concerns
@@ -22,8 +21,13 @@ Rails.application.routes.draw do
     # POST routes
     post 'authentication', to: 'authentication#create'
     post 'get_user_info', to: 'users#get_user_info'
+    post 'add_person_to_group', to: 'people#add_person_to_group'
 
     # GET routes
     get 'total_people', to: 'people#total_people'
+    get 'total_groups', to: 'groups#total_groups'
+    get 'get_people/:id', to: 'people#get_people_for_group'
+    get 'get_groups/:id', to: 'groups#get_groups'
+    get 'search_people/:query', to: 'people#search_people'
   end
 end

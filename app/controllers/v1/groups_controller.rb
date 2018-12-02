@@ -1,11 +1,16 @@
 class V1::GroupsController < V1::BaseController
   before_action :set_group, only: [:show, :update, :destroy]
+  before_action :set_pagination, only: [:index]
 
   # GET /groups
   def index
-    @groups = Group.all
-
+    @groups = Group.where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort)
     render json: @groups
+  end
+
+  def total_groups
+    count = Group.where(church_id: @current_user.church_id).count
+    render json: count
   end
 
   # GET /groups/1
