@@ -8,6 +8,10 @@ Rails.application.routes.draw do
     resources :person_profiles
     resources :people
     resources :groups
+    resources :event_exceptions
+    resources :event_instances
+    resources :event_schemas
+    resources :calendars
 
     # Concerns
     # concern :trashable do

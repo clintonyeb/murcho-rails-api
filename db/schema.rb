@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_02_091307) do
+ActiveRecord::Schema.define(version: 2018_12_03_162638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "calendars", force: :cascade do |t|
+    t.bigint "church_id"
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["church_id"], name: "index_calendars_on_church_id"
+  end
 
   create_table "churches", force: :cascade do |t|
     t.string "name"
@@ -23,6 +31,46 @@ ActiveRecord::Schema.define(version: 2018_12_02_091307) do
     t.boolean "trash", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "event_exceptions", force: :cascade do |t|
+    t.bigint "event_schema_id"
+    t.datetime "exception_date"
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_schema_id"], name: "index_event_exceptions_on_event_schema_id"
+  end
+
+  create_table "event_instances", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.boolean "is_all_day"
+    t.integer "duration"
+    t.string "location"
+    t.bigint "calendar_id"
+    t.bigint "event_schema_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["calendar_id"], name: "index_event_instances_on_calendar_id"
+  end
+
+  create_table "event_schemas", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.datetime "start_date"
+    t.datetime "end_date"
+    t.boolean "is_all_day"
+    t.boolean "is_recurring"
+    t.string "recurrence"
+    t.integer "duration"
+    t.string "location"
+    t.bigint "calendar_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["calendar_id"], name: "index_event_schemas_on_calendar_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -84,6 +132,10 @@ ActiveRecord::Schema.define(version: 2018_12_02_091307) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "calendars", "churches"
+  add_foreign_key "event_exceptions", "event_schemas"
+  add_foreign_key "event_instances", "calendars"
+  add_foreign_key "event_schemas", "calendars"
   add_foreign_key "groups", "churches"
   add_foreign_key "people", "churches"
   add_foreign_key "person_groups", "groups"
