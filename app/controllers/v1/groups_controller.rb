@@ -4,7 +4,7 @@ class V1::GroupsController < V1::BaseController
 
   # GET /groups
   def index
-    @groups = Group.where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort)
+    @groups = Group.where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort).select("groups.*, (SELECT COUNT(person_groups.id) FROM person_groups WHERE person_groups.group_id=groups.id) as people_count")
     render json: @groups
   end
 
@@ -23,7 +23,7 @@ class V1::GroupsController < V1::BaseController
     @group = Group.new(group_params)
 
     if @group.save
-      render json: @group, status: :created, location: @group
+      render json: @group, status: :created
     else
       render json: @group.errors, status: :unprocessable_entity
     end

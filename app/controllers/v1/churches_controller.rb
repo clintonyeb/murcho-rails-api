@@ -18,7 +18,7 @@ class V1::ChurchesController < V1::BaseController
     @church = Church.new(church_params)
 
     if @church.save
-      render json: @church, status: :created, location: @church
+      render json: @church, status: :created
     else
       render json: @church.errors, status: :unprocessable_entity
     end

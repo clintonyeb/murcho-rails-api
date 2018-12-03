@@ -18,7 +18,7 @@ class V1::PersonProfilesController < V1::BaseController
     @person_profile = PersonProfile.new(person_profile_params)
 
     if @person_profile.save
-      render json: @person_profile, status: :created, location: @person_profile
+      render json: @person_profile, status: :created
     else
       render json: @person_profile.errors, status: :unprocessable_entity
     end
