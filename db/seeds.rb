@@ -35,3 +35,24 @@ end
 		description: Faker::TvShows::Community.quotes
   })
 end
+
+calendar = Calendar.create({
+	church_id: church.id,
+	name: church.name,
+})
+
+50.times do
+	start_date = Faker::Date.between(Date.today, 30.days.from_now)
+	duration = 60.minutes
+
+	event_schema = EventSchema.create({
+		title: Faker::Movies::Hobbit.character,
+		description: Faker::Movies::Hobbit.quote,
+		calendar_id: calendar.id,
+		duration: duration,
+		start_date: start_date,
+		end_date: start_date + duration,
+		location: Faker::Movies::Hobbit.location,
+		color: EventSchema.colors.to_a.sample[1]
+	})
+end

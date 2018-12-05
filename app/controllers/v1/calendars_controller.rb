@@ -3,8 +3,7 @@ class V1::CalendarsController < V1::BaseController
 
   # GET /calendars
   def index
-    @calendars = Calendar.all
-
+    @calendars = Calendar.where(church_id: @current_user.church_id).select("id")
     render json: @calendars
   end
 

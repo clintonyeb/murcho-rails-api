@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_03_162638) do
+ActiveRecord::Schema.define(version: 2018_12_05_080135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 2018_12_03_162638) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "color", default: 0
     t.index ["event_schema_id"], name: "index_event_exceptions_on_event_schema_id"
   end
 
@@ -47,13 +48,14 @@ ActiveRecord::Schema.define(version: 2018_12_03_162638) do
     t.text "description"
     t.datetime "start_date"
     t.datetime "end_date"
-    t.boolean "is_all_day"
     t.integer "duration"
     t.string "location"
     t.bigint "calendar_id"
     t.bigint "event_schema_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_all_day", default: false
+    t.integer "color", default: 0
     t.index ["calendar_id"], name: "index_event_instances_on_calendar_id"
   end
 
@@ -62,14 +64,15 @@ ActiveRecord::Schema.define(version: 2018_12_03_162638) do
     t.text "description"
     t.datetime "start_date"
     t.datetime "end_date"
-    t.boolean "is_all_day"
-    t.boolean "is_recurring"
     t.string "recurrence"
     t.integer "duration"
     t.string "location"
     t.bigint "calendar_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "is_all_day", default: false
+    t.boolean "is_recurring", default: false
+    t.integer "color", default: 0
     t.index ["calendar_id"], name: "index_event_schemas_on_calendar_id"
   end
 

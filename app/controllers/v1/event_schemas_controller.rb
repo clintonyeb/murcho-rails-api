@@ -3,7 +3,10 @@ class V1::EventSchemasController < V1::BaseController
 
   # GET /event_schemas
   def index
-    @event_schemas = EventSchema.all
+    start_date = Time.parse(params[:start_date]).utc 
+    end_date = Time.parse(params[:end_date]).utc
+
+    @event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND start_date >= ? AND end_date <= ?", @current_user.church_id, start_date, end_date).select("event_schemas.id, title, start_date, color").order(created_at: :desc)
 
     render json: @event_schemas
   end
@@ -16,6 +19,14 @@ class V1::EventSchemasController < V1::BaseController
   # POST /event_schemas
   def create
     @event_schema = EventSchema.new(event_schema_params)
+    
+    # calculate end date from duration and start_date
+
+    if @event_schema.end_date.blank?
+      end_date = @event_schema.start_date + @event_schema.duration
+      logger.debug end_date
+      @event_schema.end_date = end_date
+    end
 
     if @event_schema.save
       render json: @event_schema, status: :created
@@ -46,6 +57,6 @@ class V1::EventSchemasController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def event_schema_params
-      params.require(:event_schema).permit(:title, :description, :start_date, :end_date, :is_all_day, :is_recurring, :recurrence, :duration, :location, :calendar_id)
+      params.require(:event_schema).permit(:title, :description, :start_date, :end_date, :is_all_day, :is_recurring, :recurrence, :duration, :location, :calendar_id, :color)
     end
 end
