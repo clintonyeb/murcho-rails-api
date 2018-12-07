@@ -16,7 +16,7 @@ class V1::PeopleController < V1::BaseController
 
   # GET /people/1
   def show
-    render json: @person
+    render json: @person, :include => {:groups => {:only => [:id, :name]}}
   end
 
   # POST /people
@@ -33,7 +33,7 @@ class V1::PeopleController < V1::BaseController
   # PATCH/PUT /people/1
   def update
     if @person.update(person_params)
-      render json: @person
+      render json: @person, :include => {:groups => {:only => [:id, :name]}}
     else
       render json: @person.errors, status: :unprocessable_entity
     end
@@ -71,6 +71,27 @@ class V1::PeopleController < V1::BaseController
     render json: people
   end
 
+  def add_people_to_groups
+    people = params[:people]
+    groups = params[:groups]
+
+    people.each do |person|
+      groups.each do |group|
+        PersonGroup.create(person_id: person, group_id: group)
+      end
+    end
+
+    render json: {status: true}, status: :created
+  end
+
+  def remove_person_groups
+    person_group = PersonGroup.find_by(person_id: params[:person_id], group_id: params[:group_id])
+    person_group.destroy
+    
+    person = Person.find(params[:person_id])
+    render json: person, :include => {:groups => {:only => [:id, :name]}}
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_person
@@ -79,6 +100,6 @@ class V1::PeopleController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def person_params
-      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined)
+      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id)
     end
 end

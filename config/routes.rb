@@ -26,6 +26,8 @@ Rails.application.routes.draw do
     post 'authentication', to: 'authentication#create'
     post 'get_user_info', to: 'users#get_user_info'
     post 'add_person_to_group', to: 'people#add_person_to_group'
+    post 'add_people_to_groups', to: 'people#add_people_to_groups'
+    post 'remove_person_groups', to: 'people#remove_person_groups'
 
     # GET routes
     get 'total_people', to: 'people#total_people'
@@ -33,5 +35,6 @@ Rails.application.routes.draw do
     get 'get_people/:id', to: 'people#get_people_for_group'
     get 'get_groups/:id', to: 'groups#get_groups'
     get 'search_people/:query', to: 'people#search_people'
+    get 'search_groups/:query', to: 'groups#search_groups'
   end
 end

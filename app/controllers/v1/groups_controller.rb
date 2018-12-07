@@ -43,6 +43,17 @@ class V1::GroupsController < V1::BaseController
     @group.destroy
   end
 
+  def search_groups
+    search_query = "#{params[:query]}%"
+    order = "name"
+    sort = "ASC"
+    limit = 10
+
+    groups = Group.where("church_id = ? AND LOWER(name) LIKE (?)", @current_user.church_id, search_query).limit(limit).order(order => sort).select(:id, :name, :description)
+    
+    render json: groups
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
