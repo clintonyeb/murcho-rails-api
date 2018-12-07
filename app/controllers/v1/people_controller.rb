@@ -4,6 +4,14 @@ class V1::PeopleController < V1::BaseController
 
   # GET /people
   def index
+    # people = Person.find_by_sql(["
+    #     SELECT people.*, 
+    #       (
+    #         SELECT groups.id, name
+    #         FROM groups
+    #         WHERE gro
+    #       ) 
+    #   "])
     @people = Person.where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort)
     render json: @people, :include => {:groups => {:only => [:id, :name]}}
   end
@@ -90,6 +98,10 @@ class V1::PeopleController < V1::BaseController
     
     person = Person.find(params[:person_id])
     render json: person, :include => {:groups => {:only => [:id, :name]}}
+  end
+
+  def sign_url_for_upload
+    render json: CloudStorage.sing_url(params[:file_name], params[:content_type])
   end
 
   private

@@ -28,6 +28,7 @@ Rails.application.routes.draw do
     post 'add_person_to_group', to: 'people#add_person_to_group'
     post 'add_people_to_groups', to: 'people#add_people_to_groups'
     post 'remove_person_groups', to: 'people#remove_person_groups'
+    post 'sign_url_for_upload', to: 'people#sign_url_for_upload'
 
     # GET routes
     get 'total_people', to: 'people#total_people'
