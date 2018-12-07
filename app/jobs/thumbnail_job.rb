@@ -16,7 +16,7 @@ class ThumbnailJob < ApplicationJob
     CloudStorage.upload_file(file_path, thumbnail_file)
 
     # Save new url as thumbnail
-    person.update(thumbnail: thumbnail_file)
+    person.update(thumbnail: get_aws_url(thumbnail_file))
 
     # Delete photo
     delete_file(file_path)
@@ -33,6 +33,10 @@ class ThumbnailJob < ApplicationJob
 
   def get_file_name(photo)
     File.basename(photo)
+  end
+
+  def get_aws_url(file_path)
+    return "https://s3.ap-south-1.amazonaws.com/murch-app/#{file_path}"
   end
 
 end

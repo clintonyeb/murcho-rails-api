@@ -21,7 +21,6 @@ class CloudStorage
       bucket: @bucket_name,
       key: name,
       expires_in: 300,
-      # acl: 'public-read',
       content_type: content_type
     )
 
@@ -33,7 +32,7 @@ class CloudStorage
     @s3 ||= setup_s3()
 
     resp = @s3.put_object({
-      body: file_path, 
+      body: IO.read(file_path), 
       bucket: @bucket_name, 
       key: thumbnail, 
     })
