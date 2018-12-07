@@ -42,6 +42,7 @@ class V1::PeopleController < V1::BaseController
   def update
     if @person.update(person_params)
       render json: @person, :include => {:groups => {:only => [:id, :name]}}
+      ThumbnailJob.perform_later(@person.id)
     else
       render json: @person.errors, status: :unprocessable_entity
     end
