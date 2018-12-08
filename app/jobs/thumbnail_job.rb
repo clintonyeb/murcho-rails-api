@@ -3,6 +3,8 @@ class ThumbnailJob < ApplicationJob
 
   def perform(person_id)
     person = Person.find(person_id)
+
+    person.photo.blank? and return false
     
     # Download file
     file_path = CloudStorage.download_file(person.photo)

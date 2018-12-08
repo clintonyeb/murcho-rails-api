@@ -1,22 +1,9 @@
 class PersonMailer < ApplicationMailer
   def send_mail
-    items_str = "'email'"
-
-    people = Person.not_trashed.find_by_sql(["
-      SELECT *
-      FROM crosstab($$SELECT schema_items.person_id as id, name, schema_items.data 
-                    FROM section_schemas 
-                    LEFT JOIN schema_items 
-                    ON schema_items.section_schema_id=section_schemas.id
-                    WHERE person_id IN (?)
-                    AND name = #{items_str}
-                    ORDER BY 1, 2$$) AS subs (\"id\" bigint, \"email\" varchar);", params[:person_ids]
-    ])
+    people = Person.where("church_id = ? AND id IN (?) AND email IS NOT NULL", params[:church_id], params[:person_ids]).select(:email) 
   
     count = 0
-  
     people.each do |person|
-      next if person[:'email'].nil?
       @message = params[:message]
       mail(to: person['email'], subject: params[:subject])
       count += 1

@@ -30,9 +30,11 @@ class V1::PeopleController < V1::BaseController
   # POST /people
   def create
     @person = Person.new(person_params)
+    @person.church_id = @current_user.church_id
 
     if @person.save
-      render json: @person, status: :created
+      render json: @person, :include => {:groups => {:only => [:id, :name]}}, status: :created
+      ThumbnailJob.perform_later(@person.id)
     else
       render json: @person.errors, status: :unprocessable_entity
     end
@@ -103,6 +105,14 @@ class V1::PeopleController < V1::BaseController
 
   def sign_url_for_upload
     render json: CloudStorage.sing_url(params[:file_name], params[:content_type])
+  end
+
+  def send_sms
+    SmsJob.perform_later(@current_user.church_id, params[:person_ids], params[:message])
+  end
+
+  def send_mail
+    PersonMailer.with(person_ids: params[:person_ids], subject: params[:subject], message: params[:message], church_id: @current_user.church_id).send_mail.deliver_later
   end
 
   private

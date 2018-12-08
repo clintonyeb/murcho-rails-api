@@ -13,13 +13,6 @@ Rails.application.routes.draw do
     resources :event_schemas
     resources :calendars
 
-    # Concerns
-    # concern :trashable do
-    #   delete :move_to_trash
-    #   put :move_from_trash
-    #   post :move_bulk_to_trash, on: :collection
-    # end
-  
     # Custom routes
     
     # POST routes
@@ -29,6 +22,8 @@ Rails.application.routes.draw do
     post 'add_people_to_groups', to: 'people#add_people_to_groups'
     post 'remove_person_groups', to: 'people#remove_person_groups'
     post 'sign_url_for_upload', to: 'people#sign_url_for_upload'
+    post 'send_sms', to: 'people#send_sms'
+    post 'send_mail', to: 'people#send_mail'
 
     # GET routes
     get 'total_people', to: 'people#total_people'
