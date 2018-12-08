@@ -53,6 +53,6 @@ class V1::UsersController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def user_params
-      params.require(:user).permit(:photo, :phone_number, :email, :access_level, :church_id, :password_digest, :salt, :full_name, :trash)
+      params.permit(:photo, :phone_number, :email, :access_level, :church_id, :password_digest, :salt, :full_name, :trash, :password)
     end
 end

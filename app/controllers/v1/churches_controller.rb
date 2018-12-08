@@ -1,5 +1,6 @@
 class V1::ChurchesController < V1::BaseController
   before_action :set_church, only: [:show, :update, :destroy]
+  skip_before_action :authenticate_request!, :only => [:create]
 
   # GET /churches
   def index
