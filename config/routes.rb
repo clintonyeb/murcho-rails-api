@@ -24,6 +24,8 @@ Rails.application.routes.draw do
     post 'sign_url_for_upload', to: 'people#sign_url_for_upload'
     post 'send_sms', to: 'people#send_sms'
     post 'send_mail', to: 'people#send_mail'
+    post 'people_bulk_delete', to: 'people#bulk_delete'
+    post 'people_bulk_export', to: 'people#bulk_export'
 
     # GET routes
     get 'total_people', to: 'people#total_people'

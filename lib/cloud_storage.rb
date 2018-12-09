@@ -28,13 +28,13 @@ class CloudStorage
   end
 
   # returns path of the file on the cloud-server
-  def self.upload_file(file_path, thumbnail)
+  def self.upload_file(file_path, file_name)
     @s3 ||= setup_s3()
 
     resp = @s3.put_object({
       body: IO.read(file_path), 
       bucket: @bucket_name, 
-      key: thumbnail, 
+      key: file_name, 
     })
     
   end
@@ -54,5 +54,9 @@ class CloudStorage
     IO.copy_stream(download, download_path)
     
     download_path
+  end
+
+  def self.get_aws_url(file_path)
+    return "https://s3.ap-south-1.amazonaws.com/murch-app/#{file_path}"
   end
 end

@@ -115,6 +115,21 @@ class V1::PeopleController < V1::BaseController
     PersonMailer.with(person_ids: params[:person_ids], subject: params[:subject], message: params[:message], church_id: @current_user.church_id).send_mail.deliver_later
   end
 
+  def bulk_delete
+    people_ids = params[:people_ids]
+    people_ids.each do |id|
+      person = Person.find(id)
+      person.destroy
+    end
+
+    render json: {status: true}
+  end
+
+  def bulk_export
+    file_url = ExportPeople.export(params[:export_format], @current_user.church_id, params[:people_ids])
+    render json: {file_url: file_url, status: true}
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_person
@@ -123,6 +138,6 @@ class V1::PeopleController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def person_params
-      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id, :thumbnail)
+      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id, :thumbnail, :people_ids, :export_format)
     end
 end
