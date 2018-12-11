@@ -1,21 +1,12 @@
 class V1::PeopleController < V1::BaseController
   before_action :set_person, only: [:show, :update, :destroy]
-  before_action :set_pagination, only: [:index, :get_people_for_group, :search_people]
+  before_action :set_pagination, only: [:index, :get_people_for_group, :search_people, :filter_search_people, :get_people_with_filter]
 
   # GET /people
   def index
-    # people = Person.find_by_sql(["
-    #     SELECT people.*, 
-    #       (
-    #         SELECT groups.id, name
-    #         FROM groups
-    #         WHERE gro
-    #       ) 
-    #   "])
-    @people = Person.where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort)
+    @people = Person.includes(:groups).where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort)
     render json: @people, :include => {:groups => {:only => [:id, :name]}}
   end
-  # .includes => {:groups => {:only => :name}}
 
   def total_people
     count = Person.where(church_id: @current_user.church_id).count
@@ -82,6 +73,14 @@ class V1::PeopleController < V1::BaseController
     render json: people
   end
 
+  def filter_search_people
+    search_query = "#{params[:query]}%"
+
+    people = Person.includes(:groups).where("people.church_id = ? AND (LOWER(first_name) LIKE (?) OR LOWER(last_name) LIKE (?))", @current_user.church_id, search_query, search_query).offset(@offset).limit(@size).order(@order => @sort)
+    
+    render json: people, :include => {:groups => {:only => [:id, :name]}}
+  end
+
   def add_people_to_groups
     people = params[:people]
     groups = params[:groups]
@@ -130,6 +129,14 @@ class V1::PeopleController < V1::BaseController
     render json: {file_url: file_url, status: true}
   end
 
+  def get_people_with_filter
+    filters = params[:filters]
+    query, data = build_filter_query(filters)
+
+    @people = Person.includes(:groups).where(query, *data).offset(@offset).limit(@size).order(@order => @sort)
+    render json: @people, :include => {:groups => {:only => [:id, :name]}}
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_person
@@ -138,6 +145,44 @@ class V1::PeopleController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def person_params
-      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id, :thumbnail, :people_ids, :export_format)
+      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id, :thumbnail, :people_ids, :export_format, :filters)
+    end
+
+    def build_filter_query(filters)
+      data = []
+      query = "true "
+
+      filters[:fields].each do |field|
+        query += "AND people.#{field} IS NOT NULL "
+      end
+
+      if filters[:date_joined][:start_joined].present?
+        query += "AND people.date_joined > ? "
+        data.push(filters[:date_joined][:start_joined])
+      end
+
+      if filters[:date_joined][:end_joined].present?
+        query += "AND people.date_joined < ? "
+        data.push(filters[:date_joined][:end_joined])
+      end
+
+      if filters[:groups].present?
+        people_ids = PersonGroup.distinct.where("group_id IN (?)", filters[:groups]).select(:person_id)
+
+        query += "AND people.id IN (?) "
+        data.push(people_ids)
+      end
+
+      if filters[:name].present?
+        search = "#{filters[:name]}%"
+        query += "AND (LOWER(first_name) LIKE (?) OR LOWER(last_name) LIKE (?)) "
+        data.push(search)
+        data.push(search)
+      end
+
+      query += " AND people.church_id = ? "
+      data.push(@current_user.church_id)
+
+      return query, data
     end
 end

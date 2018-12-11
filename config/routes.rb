@@ -26,6 +26,7 @@ Rails.application.routes.draw do
     post 'send_mail', to: 'people#send_mail'
     post 'people_bulk_delete', to: 'people#bulk_delete'
     post 'people_bulk_export', to: 'people#bulk_export'
+    post 'get_people_with_filter', to: 'people#get_people_with_filter'
 
     # GET routes
     get 'total_people', to: 'people#total_people'
@@ -34,5 +35,6 @@ Rails.application.routes.draw do
     get 'get_groups/:id', to: 'groups#get_groups'
     get 'search_people/:query', to: 'people#search_people'
     get 'search_groups/:query', to: 'groups#search_groups'
+    get 'filter_search_people/:query', to: 'people#filter_search_people'
   end
 end

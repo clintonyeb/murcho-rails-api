@@ -9,7 +9,7 @@ church = Church.create({
 user = User.create({
   full_name: "clinton yeboah",
 	phone_number: "3132131",
-	email: "clint@murch.com",
+	email: "clint@murcho.com",
 	access_level: :super_admin,
 	password: "12312312",
 	church_id: church.id
@@ -28,7 +28,7 @@ user = User.create({
   })
 end
 
-10.times do
+50.times do
   group = Group.create({
 		church_id: church.id,
 		name: Faker::TvShows::Community.characters,

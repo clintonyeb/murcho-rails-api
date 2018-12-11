@@ -1,0 +1,6 @@
+SELECT people.*, groups.id as group_id, groups.name as group_name
+FROM people 
+INNER JOIN person_groups
+ON people.id = person_groups.person_id
+INNER JOIN groups
+ON person_groups.group_id = groups.id;
