@@ -167,7 +167,7 @@ class V1::PeopleController < V1::BaseController
       end
 
       if filters[:groups].present?
-        people_ids = PersonGroup.distinct.where("group_id IN (?)", filters[:groups]).select(:person_id)
+        people_ids = PersonGroup.distinct.where("group_id IN (?)", filters[:groups].map { |g| g[:id] }).select(:person_id)
 
         query += "AND people.id IN (?) "
         data.push(people_ids)
