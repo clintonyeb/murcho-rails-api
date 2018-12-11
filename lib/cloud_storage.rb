@@ -43,11 +43,11 @@ class CloudStorage
     photo.base_uri.to_s.split('/')[-1]
   end
 
-  def self.download_file(file_path)
+  def self.download_file(file_path, dest)
     require 'open-uri'
     download = open(file_path)
 
-    dir = Rails.root.join('tmp/photos')
+    dir = Rails.root.join("tmp/#{dest}")
     system 'mkdir', '-p', dir.to_path
 
     download_path = "#{dir}/#{get_file_name(download)}"

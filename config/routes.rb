@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     post 'people_bulk_delete', to: 'people#bulk_delete'
     post 'people_bulk_export', to: 'people#bulk_export'
     post 'get_people_with_filter', to: 'people#get_people_with_filter'
+    post 'people_bulk_import', to: 'people#bulk_import'
 
     # GET routes
     get 'total_people', to: 'people#total_people'

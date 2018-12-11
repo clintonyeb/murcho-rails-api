@@ -129,6 +129,10 @@ class V1::PeopleController < V1::BaseController
     render json: {file_url: file_url, status: true}
   end
 
+  def bulk_import
+    ImportPeople.do_import(params[:file_url], @current_user.church_id)
+  end
+
   def get_people_with_filter
     filters = params[:filters]
     query, data = build_filter_query(filters)
@@ -145,7 +149,7 @@ class V1::PeopleController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def person_params
-      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id, :thumbnail, :people_ids, :export_format, :filters)
+      params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id, :thumbnail, :people_ids, :export_format, :filters, :file_url)
     end
 
     def build_filter_query(filters)

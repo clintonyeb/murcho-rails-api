@@ -6,5 +6,5 @@ class Person < ApplicationRecord
   validates :church_id, presence: true
 
   enum rel_status: [:single, :courting, :married, :divorced, :widowed]
-  enum membership_status: [:member, :guest, :former_member]
+  enum membership_status: [:member, :guest, :former]
 end

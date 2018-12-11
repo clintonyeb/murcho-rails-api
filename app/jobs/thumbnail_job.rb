@@ -7,7 +7,7 @@ class ThumbnailJob < ApplicationJob
     person.photo.blank? and return false
     
     # Download file
-    file_path = CloudStorage.download_file(person.photo)
+    file_path = CloudStorage.download_file(person.photo,  'photos')
     # if file_path.blank? raise "could not download file"
 
     # Use Convert to resize it
