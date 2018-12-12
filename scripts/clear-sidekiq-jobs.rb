@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 require 'sidekiq/api'
 
 # 1. Clear retry set
