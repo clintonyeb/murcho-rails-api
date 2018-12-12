@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_07_165513) do
+ActiveRecord::Schema.define(version: 2018_12_12_171459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,15 @@ ActiveRecord::Schema.define(version: 2018_12_07_165513) do
     t.datetime "updated_at", null: false
     t.integer "color", default: 0
     t.index ["event_schema_id"], name: "index_event_exceptions_on_event_schema_id"
+  end
+
+  create_table "event_groups", force: :cascade do |t|
+    t.bigint "event_schema_id"
+    t.bigint "group_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_schema_id"], name: "index_event_groups_on_event_schema_id"
+    t.index ["group_id"], name: "index_event_groups_on_group_id"
   end
 
   create_table "event_instances", force: :cascade do |t|
@@ -138,6 +147,8 @@ ActiveRecord::Schema.define(version: 2018_12_07_165513) do
 
   add_foreign_key "calendars", "churches"
   add_foreign_key "event_exceptions", "event_schemas"
+  add_foreign_key "event_groups", "event_schemas"
+  add_foreign_key "event_groups", "groups"
   add_foreign_key "event_instances", "calendars"
   add_foreign_key "event_schemas", "calendars"
   add_foreign_key "groups", "churches"
