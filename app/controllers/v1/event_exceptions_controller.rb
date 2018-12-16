@@ -15,12 +15,18 @@ class V1::EventExceptionsController < V1::BaseController
 
   # POST /event_exceptions
   def create
-    @event_exception = EventException.new(event_exception_params)
+    if params[:is_exception]
+      event_exception = EventException.where(event_schema_id: params[:event_schema_id], start_date: params[:exception_date]).first
+      event_exception.start_date = params[:start_date]
+    else 
+      event_exception = EventException.new(event_exception_params)
+      old_exceptions = EventException.where(event_schema_id: event_exception.event_schema_id, exception_date: event_exception.exception_date).destroy_all
+    end
 
-    if @event_exception.save
-      render json: @event_exception, status: :created
+    if event_exception.save
+      render json: event_exception, status: :created
     else
-      render json: @event_exception.errors, status: :unprocessable_entity
+      render json: event_exception.errors, status: :unprocessable_entity
     end
   end
 
@@ -46,6 +52,6 @@ class V1::EventExceptionsController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def event_exception_params
-      params.require(:event_exception).permit(:event_schema_id, :exception_date, :status)
+      params.require(:event_exception).permit(:event_schema_id, :exception_date, :status, :start_date, :end_date, :is_exception)
     end
 end

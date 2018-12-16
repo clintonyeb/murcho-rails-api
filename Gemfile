@@ -58,3 +58,4 @@ gem 'twilio-ruby', '~> 5.16.0'
 gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
 gem 'sidekiq'
 gem "roo", "~> 2.7.0"
+gem 'rrule'

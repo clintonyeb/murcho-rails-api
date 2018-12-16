@@ -153,6 +153,8 @@ GEM
     roo (2.7.1)
       nokogiri (~> 1)
       rubyzip (~> 1.1, < 2.0.0)
+    rrule (0.4.1)
+      activesupport (>= 4.1)
     ruby_dep (1.5.0)
     rubyzip (1.2.2)
     sidekiq (5.2.3)
@@ -201,6 +203,7 @@ DEPENDENCIES
   rack-cors
   rails (~> 5.2.0)
   roo (~> 2.7.0)
+  rrule
   sidekiq
   spring
   spring-watcher-listen (~> 2.0.0)

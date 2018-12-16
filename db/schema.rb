@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_12_171459) do
+ActiveRecord::Schema.define(version: 2018_12_16_114510) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,7 +39,8 @@ ActiveRecord::Schema.define(version: 2018_12_12_171459) do
     t.integer "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "color", default: 0
+    t.datetime "start_date"
+    t.datetime "end_date"
     t.index ["event_schema_id"], name: "index_event_exceptions_on_event_schema_id"
   end
 
@@ -50,22 +51,6 @@ ActiveRecord::Schema.define(version: 2018_12_12_171459) do
     t.datetime "updated_at", null: false
     t.index ["event_schema_id"], name: "index_event_groups_on_event_schema_id"
     t.index ["group_id"], name: "index_event_groups_on_group_id"
-  end
-
-  create_table "event_instances", force: :cascade do |t|
-    t.string "title"
-    t.text "description"
-    t.datetime "start_date"
-    t.datetime "end_date"
-    t.integer "duration"
-    t.string "location"
-    t.bigint "calendar_id"
-    t.bigint "event_schema_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.boolean "is_all_day", default: false
-    t.integer "color", default: 0
-    t.index ["calendar_id"], name: "index_event_instances_on_calendar_id"
   end
 
   create_table "event_schemas", force: :cascade do |t|
@@ -149,7 +134,6 @@ ActiveRecord::Schema.define(version: 2018_12_12_171459) do
   add_foreign_key "event_exceptions", "event_schemas"
   add_foreign_key "event_groups", "event_schemas"
   add_foreign_key "event_groups", "groups"
-  add_foreign_key "event_instances", "calendars"
   add_foreign_key "event_schemas", "calendars"
   add_foreign_key "groups", "churches"
   add_foreign_key "people", "churches"

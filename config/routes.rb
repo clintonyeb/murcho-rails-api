@@ -42,5 +42,3 @@ Rails.application.routes.draw do
     get 'filter_search_people/:query', to: 'people#filter_search_people'
   end
 end
-
-
