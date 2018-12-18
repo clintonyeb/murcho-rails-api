@@ -8,23 +8,13 @@ class V1::EventSchemasController < V1::BaseController
 
     results = Array.new
 
-    # event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND start_date >= ? AND end_date <= ? AND is_recurring = false", @current_user.church_id, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :desc)
-
-    # recurring_event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND is_recurring = true AND (start_date >= ? OR end_date <= ?)", @current_user.church_id, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :desc)
-
-    # results.concat(event_schemas)
-
-    # recurring_event_schemas.each do |event|
-    #   results.concat(generate_events_from_rrule(event, start_date, end_date))
-    # end
-
     event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(updated_at: :desc, start_date: :desc)
 
     event_schemas.each do |event|
-      if not event.is_recurring
-        results.push(event)
-      else
+      if event.is_recurring
         results.concat(generate_events_from_rrule(event, start_date, end_date))
+      else
+        results.push(event)
       end
     end
 
@@ -51,10 +41,10 @@ class V1::EventSchemasController < V1::BaseController
     end
 
     if @event_schema.save
-      if not @event_schema.is_recurring
-        results.push(@event_schema)
-      else
+      if @event_schema.is_recurring
         results.concat(generate_events_from_rrule(@event_schema, startDate, endDate))
+      else
+        results.push(@event_schema)
       end
       render json: results, status: :created
     else
@@ -99,21 +89,60 @@ class V1::EventSchemasController < V1::BaseController
 
   def upcoming_events
     start_date = Time.now
-    end_date = Time.now + 1.months
+    end_date = start_date + 1.months
     limit = params[:limit] || 15
     results = Array.new
 
     event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :asc, updated_at: :desc).limit(limit)
 
     event_schemas.each do |event|
-      if not event.is_recurring
-        results.push(event)
-      else
+      if event.is_recurring
         results.push(generate_event_from_rrule(event, start_date, end_date))
+      else
+        results.push(event)
       end
     end
 
     render json: results
+  end
+
+  def add_event_to_groups
+    group_ids = params[:group_ids]
+    event_schema_id = params[:event_schema_id]
+
+    group_ids.each do |group_id|
+      EventGroup.create({
+        event_schema_id: event_schema_id,
+        group_id: group_id
+      })
+    end
+
+    render json: { status: true }
+  end
+
+  def get_events_for_group
+    group_id = params[:group_id]
+    limit = params[:limit] || 15
+
+    start_date = Time.now
+    end_date = start_date + 1.months
+    results = Array.new
+
+    event_schemas = EventSchema.joins(:calendar).joins("INNER JOIN event_groups ON event_groups.event_schema_id = event_schemas.id").where("church_id = ? AND event_groups.group_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, group_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :asc, updated_at: :desc).limit(limit)
+
+    logger.debug event_schemas.size
+
+    event_schemas.each do |event|
+      if event.is_recurring
+        results.push(generate_event_from_rrule(event, start_date, end_date))
+
+      else
+        results.push(event)
+      end
+    end
+
+    render json: results
+
   end
 
   private
@@ -187,6 +216,6 @@ class V1::EventSchemasController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def event_schema_params
-      params.require(:event_schema).permit(:title, :description, :start_date, :end_date, :is_all_day, :is_recurring, :recurrence, :duration, :location, :calendar_id, :color, :startDate, :endDate)
+      params.require(:event_schema).permit(:title, :description, :start_date, :end_date, :is_all_day, :is_recurring, :recurrence, :duration, :location, :calendar_id, :color, :startDate, :endDate, :group_ids, :event_schema_id)
     end
 end

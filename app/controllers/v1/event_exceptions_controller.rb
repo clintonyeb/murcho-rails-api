@@ -18,11 +18,11 @@ class V1::EventExceptionsController < V1::BaseController
     if params[:is_exception]
       event_exception = EventException.where(event_schema_id: params[:event_schema_id], start_date: params[:exception_date]).first
       event_exception.start_date = params[:start_date]
-    else 
+    else
+      old_exceptions = EventException.where(event_schema_id: params[:event_schema_id], exception_date: params[:exception_date]).destroy_all
       event_exception = EventException.new(event_exception_params)
-      old_exceptions = EventException.where(event_schema_id: event_exception.event_schema_id, exception_date: event_exception.exception_date).destroy_all
     end
-
+`
     if event_exception.save
       render json: event_exception, status: :created
     else

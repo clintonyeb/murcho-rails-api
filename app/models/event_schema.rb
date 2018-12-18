@@ -4,6 +4,7 @@ class EventSchema < ApplicationRecord
   belongs_to :calendar
   has_one :event_schema, foreign_key: :parent_event_schema_id
   has_many :event_exceptions, dependent: :delete_all
+  has_many :event_groups, dependent: :delete_all
 
   validates :title, :start_date, :duration, :end_date, presence: true
   # validates : if is_recurring true: then make sure recurrence is not null

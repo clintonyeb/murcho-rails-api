@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     post 'group_send_mail', to: 'groups#send_mail'
     post 'group_send_sms', to: 'groups#send_sms'
     post 'group_bulk_export', to: 'groups#bulk_export'
+    post 'add_event_to_groups', to: 'event_schemas#add_event_to_groups'
 
     # GET routes
     get 'total_people', to: 'people#total_people'
@@ -40,5 +41,6 @@ Rails.application.routes.draw do
     get 'search_groups/:query', to: 'groups#search_groups'
     get 'filter_search_people/:query', to: 'people#filter_search_people'
     get 'upcoming_events', to: 'event_schemas#upcoming_events'
+    get 'get_events_for_group/:group_id', to: 'event_schemas#get_events_for_group'
   end
 end
