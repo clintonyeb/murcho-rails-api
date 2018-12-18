@@ -1,1 +1,1 @@
-bin/bundle exec sidekiq -C config/sidekiq.yml
+../bin/bundle exec sidekiq -C ../config/sidekiq.yml
