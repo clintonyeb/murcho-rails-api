@@ -9,7 +9,6 @@ Rails.application.routes.draw do
     resources :people
     resources :groups
     resources :event_exceptions
-    resources :event_instances
     resources :event_schemas
     resources :calendars
 
@@ -40,5 +39,6 @@ Rails.application.routes.draw do
     get 'search_people/:query', to: 'people#search_people'
     get 'search_groups/:query', to: 'groups#search_groups'
     get 'filter_search_people/:query', to: 'people#filter_search_people'
+    get 'upcoming_events', to: 'event_schemas#upcoming_events'
   end
 end

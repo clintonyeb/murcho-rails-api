@@ -8,7 +8,17 @@ class V1::EventSchemasController < V1::BaseController
 
     results = Array.new
 
-    event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND start_date >= ? AND end_date <= ?", @current_user.church_id, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(updated_at: :desc, start_date: :desc)
+    # event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND start_date >= ? AND end_date <= ? AND is_recurring = false", @current_user.church_id, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :desc)
+
+    # recurring_event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND is_recurring = true AND (start_date >= ? OR end_date <= ?)", @current_user.church_id, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :desc)
+
+    # results.concat(event_schemas)
+
+    # recurring_event_schemas.each do |event|
+    #   results.concat(generate_events_from_rrule(event, start_date, end_date))
+    # end
+
+    event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(updated_at: :desc, start_date: :desc)
 
     event_schemas.each do |event|
       if not event.is_recurring
@@ -89,11 +99,11 @@ class V1::EventSchemasController < V1::BaseController
 
   def upcoming_events
     start_date = Time.now
-    limit = 15
-
+    end_date = Time.now + 1.months
+    limit = params[:limit] || 15
     results = Array.new
 
-    event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND start_date >= ?", @current_user.church_id, start_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :desc, updated_at: :desc)
+    event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :asc, updated_at: :desc).limit(limit)
 
     event_schemas.each do |event|
       if not event.is_recurring
@@ -115,7 +125,7 @@ class V1::EventSchemasController < V1::BaseController
 
       recurrence_end_date = end_date < event.end_date ? end_date : event.end_date
 
-      rrule.between(start_date, recurrence_end_date).each_with_index do |event_date, index|
+      rrule.between(start_date, recurrence_end_date).each do |event_date|
         gen_event = event.dup
         gen_event.id = event.id
         gen_event.start_date = event_date
@@ -143,10 +153,11 @@ class V1::EventSchemasController < V1::BaseController
     def generate_event_from_rrule(event, start_date, end_date)
       recurrence = event.recurrence.split('RRULE:')[1]
       rrule = RRule::Rule.new(recurrence, dtstart: event.start_date)
+      logger.debug "Generating events for More ::: " + event.title
 
       recurrence_end_date = end_date < event.end_date ? end_date : event.end_date
 
-      rrule.between(start_date, recurrence_end_date).each_with_index do |event_date, index|
+      rrule.between(start_date, recurrence_end_date).each do |event_date|
         gen_event = event.dup
         gen_event.id = event.id
         gen_event.start_date = event_date
@@ -156,7 +167,7 @@ class V1::EventSchemasController < V1::BaseController
         event_exception = EventException.where("event_schema_id = ? AND exception_date = ?", gen_event.id, gen_event.start_date).first
 
         if event_exception.present?
-          if EventException.statuses[event_exception.status] == EventException.statuses[:cancelled] # cancelled 
+          if EventException.statuses[event_exception.status] == EventException.statuses[:cancelled] # cancelled
             next
           else # resceduled
             gen_event.start_date = event_exception.start_date
@@ -165,10 +176,8 @@ class V1::EventSchemasController < V1::BaseController
           end
         end
         
-        results.push(gen_event)
+        break gen_event
       end
-
-      results
     end
 
     # Use callbacks to share common setup or constraints between actions.
