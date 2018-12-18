@@ -87,10 +87,60 @@ class V1::EventSchemasController < V1::BaseController
     end
   end
 
+  def upcoming_events
+    start_date = Time.now
+    limit = 15
+
+    results = Array.new
+
+    event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND start_date >= ?", @current_user.church_id, start_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :desc, updated_at: :desc)
+
+    event_schemas.each do |event|
+      if not event.is_recurring
+        results.push(event)
+      else
+        results.push(generate_event_from_rrule(event, start_date, end_date))
+      end
+    end
+
+    render json: results
+  end
+
   private
 
     def generate_events_from_rrule(event, start_date, end_date)
       results = Array.new
+      recurrence = event.recurrence.split('RRULE:')[1]
+      rrule = RRule::Rule.new(recurrence, dtstart: event.start_date)
+
+      recurrence_end_date = end_date < event.end_date ? end_date : event.end_date
+
+      rrule.between(start_date, recurrence_end_date).each_with_index do |event_date, index|
+        gen_event = event.dup
+        gen_event.id = event.id
+        gen_event.start_date = event_date
+        gen_event.is_exception = false
+
+        # check if event is cancelled or rescheduled
+        event_exception = EventException.where("event_schema_id = ? AND exception_date = ?", gen_event.id, gen_event.start_date).first
+
+        if event_exception.present?
+          if EventException.statuses[event_exception.status] == EventException.statuses[:cancelled] # cancelled 
+            next
+          else # resceduled
+            gen_event.start_date = event_exception.start_date
+            gen_event.end_date = event_exception.end_date
+            gen_event.is_exception = true
+          end
+        end
+        
+        results.push(gen_event)
+      end
+
+      results
+    end
+
+    def generate_event_from_rrule(event, start_date, end_date)
       recurrence = event.recurrence.split('RRULE:')[1]
       rrule = RRule::Rule.new(recurrence, dtstart: event.start_date)
 
