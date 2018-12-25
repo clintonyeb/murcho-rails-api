@@ -10,18 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_18_115653) do
+ActiveRecord::Schema.define(version: 2018_12_25_105550) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-
-  create_table "calendars", force: :cascade do |t|
-    t.bigint "church_id"
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["church_id"], name: "index_calendars_on_church_id"
-  end
 
   create_table "churches", force: :cascade do |t|
     t.string "name"
@@ -63,13 +55,13 @@ ActiveRecord::Schema.define(version: 2018_12_18_115653) do
     t.string "recurrence"
     t.integer "duration"
     t.string "location"
-    t.bigint "calendar_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_all_day", default: false
     t.boolean "is_recurring", default: false
     t.integer "color", default: 0
-    t.index ["calendar_id"], name: "index_event_schemas_on_calendar_id"
+    t.bigint "church_id"
+    t.index ["church_id"], name: "index_event_schemas_on_church_id"
   end
 
   create_table "groups", force: :cascade do |t|
@@ -132,11 +124,9 @@ ActiveRecord::Schema.define(version: 2018_12_18_115653) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "calendars", "churches"
   add_foreign_key "event_exceptions", "event_schemas"
   add_foreign_key "event_groups", "event_schemas"
   add_foreign_key "event_groups", "groups"
-  add_foreign_key "event_schemas", "calendars"
   add_foreign_key "groups", "churches"
   add_foreign_key "people", "churches"
   add_foreign_key "person_groups", "groups"

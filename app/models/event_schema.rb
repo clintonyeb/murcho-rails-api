@@ -1,7 +1,6 @@
 class EventSchema < ApplicationRecord
   attr_accessor :is_exception
 
-  belongs_to :calendar
   has_one :event_schema, foreign_key: :parent_event_schema_id
   has_many :event_exceptions, dependent: :delete_all
   has_many :event_groups, dependent: :delete_all

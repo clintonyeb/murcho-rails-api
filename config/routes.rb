@@ -10,7 +10,6 @@ Rails.application.routes.draw do
     resources :groups
     resources :event_exceptions
     resources :event_schemas
-    resources :calendars
 
     # Custom routes
     
@@ -42,5 +41,11 @@ Rails.application.routes.draw do
     get 'filter_search_people/:query', to: 'people#filter_search_people'
     get 'upcoming_events', to: 'event_schemas#upcoming_events'
     get 'get_events_for_group/:group_id', to: 'event_schemas#get_events_for_group'
+    get 'get_church_info/:church_id', to: 'churches#church_info'
+
+    # Updates
+    get 'get_people_updates', to: 'people#get_updates'
+    get 'get_groups_updates', to: 'groups#get_updates'
+    get 'get_events_updates', to: 'event_schemas#get_updates'
   end
 end

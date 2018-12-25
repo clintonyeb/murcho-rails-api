@@ -140,6 +140,11 @@ class V1::PeopleController < V1::BaseController
     @people = Person.includes(:groups).where(query, *data).offset(@offset).limit(@size).order(@order => @sort)
     render json: @people, :include => {:groups => {:only => [:id, :name]}}
   end
+
+  def get_updates
+    people = Person.where(church_id: @current_user.church_id).select(:id, :first_name, :last_name, :thumbnail, :photo, :membership_status, :date_joined).limit(10).order(updated_at: :desc)
+    render json: people
+  end
   
   private
     # Use callbacks to share common setup or constraints between actions.

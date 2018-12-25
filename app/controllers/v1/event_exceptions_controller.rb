@@ -22,7 +22,7 @@ class V1::EventExceptionsController < V1::BaseController
       old_exceptions = EventException.where(event_schema_id: params[:event_schema_id], exception_date: params[:exception_date]).destroy_all
       event_exception = EventException.new(event_exception_params)
     end
-`
+` 
     if event_exception.save
       render json: event_exception, status: :created
     else

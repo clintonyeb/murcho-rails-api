@@ -39,6 +39,14 @@ class V1::ChurchesController < V1::BaseController
     @church.destroy
   end
 
+  def church_info
+    church_id = params[:church_id]
+    church = Church.find(church_id)
+    members_count = Person.where(church_id: church_id, membership_status: :member).count
+    guests_count = Person.where(church_id: church_id, membership_status: :guest).count
+    render json: {church: church, members: members_count, guests: guests_count} 
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_church

@@ -8,7 +8,7 @@ class V1::EventSchemasController < V1::BaseController
 
     results = Array.new
 
-    event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(updated_at: :desc, start_date: :desc)
+    event_schemas = EventSchema.where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(updated_at: :desc, start_date: :desc)
 
     event_schemas.each do |event|
       if event.is_recurring
@@ -93,7 +93,7 @@ class V1::EventSchemasController < V1::BaseController
     limit = params[:limit] || 15
     results = Array.new
 
-    event_schemas = EventSchema.joins(:calendar).where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :asc, updated_at: :desc).limit(limit)
+    event_schemas = EventSchema.where("church_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :asc, updated_at: :desc).limit(limit)
 
     event_schemas.each do |event|
       if event.is_recurring
@@ -128,7 +128,7 @@ class V1::EventSchemasController < V1::BaseController
     end_date = start_date + 1.months
     results = Array.new
 
-    event_schemas = EventSchema.joins(:calendar).joins("INNER JOIN event_groups ON event_groups.event_schema_id = event_schemas.id").where("church_id = ? AND event_groups.group_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, group_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :asc, updated_at: :desc).limit(limit)
+    event_schemas = EventSchema.joins("INNER JOIN event_groups ON event_groups.event_schema_id = event_schemas.id").where("church_id = ? AND event_groups.group_id = ? AND ( (is_recurring = false AND start_date >= ? AND end_date <= ?) OR (is_recurring = true AND (start_date >= ? OR end_date <= ?)) )", @current_user.church_id, group_id, start_date, end_date, start_date, end_date).select("event_schemas.id, title, description, start_date, end_date, color, is_recurring, recurrence, duration").order(start_date: :asc, updated_at: :desc).limit(limit)
 
     logger.debug event_schemas.size
 
@@ -143,6 +143,11 @@ class V1::EventSchemasController < V1::BaseController
 
     render json: results
 
+  end
+
+  def get_updates
+    events = EventSchema.where(church_id: @current_user.church_id).select(:id, :title, :start_date, :color, :duration).limit(10).order(updated_at: :desc)
+    render json: events
   end
 
   private

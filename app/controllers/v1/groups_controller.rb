@@ -71,6 +71,11 @@ class V1::GroupsController < V1::BaseController
     render json: {file_url: file_url, status: true}
   end
 
+  def get_updates
+    groups = Group.where(church_id: @current_user.church_id).select(:id, :name, :updated_at, "(SELECT COUNT(person_groups.id) FROM person_groups WHERE person_groups.group_id=groups.id) as people_count").limit(10).order(updated_at: :desc)
+    render json: groups
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
