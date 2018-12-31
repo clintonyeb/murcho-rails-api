@@ -1,1 +1,1 @@
-../bin/bundle exec sidekiq -C ../config/sidekiq.yml
+~/Projects/murcho/api/bin/bundle exec sidekiq -C ~/Projects/murcho/api/config/sidekiq.yml

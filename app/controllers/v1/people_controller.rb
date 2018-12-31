@@ -145,6 +145,36 @@ class V1::PeopleController < V1::BaseController
     people = Person.where(church_id: @current_user.church_id).select(:id, :first_name, :last_name, :thumbnail, :photo, :membership_status, :date_joined).limit(10).order(updated_at: :desc)
     render json: people
   end
+
+  def get_people_stats
+    interval = params[:interval] || 'month'
+    count = params[:count] || 20
+
+    end_date = Time.now
+    start_date = count.send(interval).ago
+    interval_value = "1 #{interval}"
+
+    label_query = "
+    SELECT generate_series(timestamp ?, timestamp ?, interval ?) AS labels ORDER  BY 1;
+    "
+
+    series_query = "
+    SELECT labels, count(e.created_at) AS events
+      FROM (SELECT generate_series(timestamp ?, timestamp ?, interval ?) AS labels) g(labels)
+      LEFT JOIN people e ON e.created_at >= g.labels
+      AND e.created_at <  g.labels + interval ?
+      AND e.membership_status = ?
+      GROUP  BY 1
+      ORDER  BY 1;
+    "
+
+    labels = Person.find_by_sql([label_query, start_date, end_date, interval_value]).pluck(:labels)
+    member_series = Person.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, Person.membership_statuses[:member]]).pluck(:events)
+    guest_series = Person.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, Person.membership_statuses[:guest]]).pluck(:events)
+    former_series = Person.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, Person.membership_statuses[:former]]).pluck(:events)
+
+    render json: {labels: labels, series: [member_series, guest_series, former_series], interval: interval, count: count, start_date: start_date, end_date: end_date}
+  end
   
   private
     # Use callbacks to share common setup or constraints between actions.

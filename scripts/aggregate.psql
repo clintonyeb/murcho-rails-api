@@ -1,0 +1,64 @@
+-- SELECT date_trunc('minute', created_at) AS stats_label ,count(id) AS stats_value                          
+-- FROM   people                              
+-- WHERE  created_at >= '2018-11-01 00:00:00+02'::timestamptz -- user's time range
+-- AND    created_at <  '2019-01-01 00:00:00+02'::timestamptz -- careful with borders 
+-- GROUP  BY 1                                                                
+-- ORDER  BY 1;
+
+
+-- SELECT *
+-- FROM  (
+--    SELECT day::date
+--    FROM   generate_series(timestamp '2018-11-01'
+--                         , timestamp '2019-01-01'
+--                         , interval  $$1 'month'$$) day
+--    ) d
+-- LEFT JOIN (
+--    SELECT date_trunc('month', created_at)::date AS day
+--         , count(id) AS stats_value
+--    FROM   people
+--    WHERE  created_at >= date '2018-11-01'
+--    AND    created_at <= date '2019-01-01'
+--    GROUP  BY 1
+--    ) t USING (day)
+-- ORDER  BY day;
+
+-- SELECT day, COALESCE(stats_value, 0) AS stats_value 
+--     FROM  (
+--       SELECT day::date
+--       FROM   generate_series(timestamp '2018-04-02'
+--                         , timestamp '2019-01-02'
+--                         , interval  $$1 'month'$$) day
+--       ) d
+--     LEFT JOIN (
+--       SELECT date_trunc('month', created_at)::date AS day
+--         ,  count(id) AS stats_value
+--       FROM   people
+--       WHERE  created_at >= date '2018-04-02'
+--       AND    created_at <= date '2019-01-02'
+--       GROUP  BY 1
+--     ) t USING (day)
+--     ORDER  BY day;
+
+-- WITH grid AS (
+--    SELECT start_time
+--         , lead(start_time, 1, 'infinity') OVER (ORDER BY start_time) AS end_time
+--    FROM  (
+--       SELECT generate_series(timestamp '2018-04-02'
+--                             , timestamp '2019-01-02'
+--                             , interval $$1 'month'$$) AS start_time
+--       ) sub
+--    )
+-- SELECT start_time, count(e.created_at) AS events
+-- FROM   grid       g
+-- LEFT   JOIN people e ON e.created_at >= g.start_time
+--                    AND e.created_at <  g.end_time
+-- GROUP  BY start_time
+-- ORDER  BY start_time;
+
+SELECT start_time, count(e.created_at) AS events
+FROM  (SELECT generate_series(timestamp '2018-04-02', timestamp '2019-01-02', interval $$1 'month'$$)) g(start_time)
+LEFT   JOIN people e ON e.created_at >= g.start_time
+                   AND e.created_at <  g.start_time + interval $$1 'month'$$
+GROUP  BY 1
+ORDER  BY 1;

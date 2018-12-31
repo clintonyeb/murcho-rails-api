@@ -47,5 +47,8 @@ Rails.application.routes.draw do
     get 'get_people_updates', to: 'people#get_updates'
     get 'get_groups_updates', to: 'groups#get_updates'
     get 'get_events_updates', to: 'event_schemas#get_updates'
+
+    # Statistics
+    get 'get_people_stats', to: 'people#get_people_stats'
   end
 end

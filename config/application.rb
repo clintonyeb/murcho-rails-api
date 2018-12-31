@@ -36,5 +36,7 @@ module Api
     config.eager_load_paths << Rails.root.join('lib')
 
     config.active_job.queue_adapter = :sidekiq
+
+    config.allow_concurrency = true
   end
 end
