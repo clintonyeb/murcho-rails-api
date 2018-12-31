@@ -1,0 +1,7 @@
+SELECT labels, count(e.start_date) AS events
+FROM  (SELECT generate_series(timestamp '2018-04-02', timestamp '2019-01-02', interval $$1 'month'$$)) g(labels)
+LEFT   JOIN event_schemas e ON e.start_date >= g.labels
+                   AND e.start_date <  g.labels + interval $$1 'month'$$
+                   AND e.is_recurring = FALSE
+GROUP  BY 1
+ORDER  BY 1;

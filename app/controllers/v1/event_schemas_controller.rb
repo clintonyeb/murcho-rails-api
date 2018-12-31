@@ -152,7 +152,7 @@ class V1::EventSchemasController < V1::BaseController
 
   def get_events_density_stats
     interval = params[:interval] || 'month'
-    count = params[:count] || 20
+    count = params[:count] || 19
 
     end_date = Time.now
     start_date = count.send(interval).ago
@@ -161,23 +161,21 @@ class V1::EventSchemasController < V1::BaseController
     label_query = "
     SELECT generate_series(timestamp ?, timestamp ?, interval ?) AS labels ORDER  BY 1;
     "
-    
+
     series_query = "
-    SELECT labels, count(e.created_at) AS events
-      FROM (SELECT generate_series(timestamp ?, timestamp ?, interval ?) AS labels) g(labels)
-      LEFT JOIN people e ON e.created_at >= g.labels
-      AND e.created_at <  g.labels + interval ?
-      AND e.membership_status = ?
-      GROUP  BY 1
-      ORDER  BY 1;
+    SELECT labels, count(e.start_date) AS events
+    FROM  (SELECT generate_series(timestamp ?, timestamp ?, interval ?)) g(labels)
+    LEFT   JOIN event_schemas e ON e.start_date >= g.labels
+    AND e.start_date <  g.labels + interval ?
+    AND e.is_recurring = ?
+    GROUP  BY 1
+    ORDER  BY 1;
     "
 
-    labels = Person.find_by_sql([label_query, start_date, end_date, interval_value]).pluck(:labels)
-    member_series = Person.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, Person.membership_statuses[:member]]).pluck(:events)
-    guest_series = Person.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, Person.membership_statuses[:guest]]).pluck(:events)
-    former_series = Person.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, Person.membership_statuses[:former]]).pluck(:events)
+    labels = EventSchema.find_by_sql([label_query, start_date, end_date, interval_value]).pluck(:labels)
+    non_recurring_series = EventSchema.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, false]).pluck(:events)
 
-    render json: {labels: labels, series: [member_series, guest_series, former_series], interval: interval, count: count, start_date: start_date, end_date: end_date}
+    render json: {labels: labels, series: [non_recurring_series], interval: interval, count: count, start_date: start_date, end_date: end_date}
   end
 
   private

@@ -148,11 +148,15 @@ class V1::PeopleController < V1::BaseController
 
   def get_people_stats
     interval = params[:interval] || 'month'
-    count = params[:count] || 20
+    count = params[:count] || 19
 
     end_date = Time.now
     start_date = count.send(interval).ago
     interval_value = "1 #{interval}"
+
+    logger.debug(start_date)
+    logger.debug(end_date)
+    puts "kjsadksbdambdamsabmdbasmbsamna"
 
     label_query = "
     SELECT generate_series(timestamp ?, timestamp ?, interval ?) AS labels ORDER  BY 1;

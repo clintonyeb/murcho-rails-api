@@ -50,5 +50,7 @@ Rails.application.routes.draw do
 
     # Statistics
     get 'get_people_stats', to: 'people#get_people_stats'
+    get 'get_events_density_stats', to: 'event_schemas#get_events_density_stats'
+    get 'get_actions_stats', to: 'users#get_actions_stats'
   end
 end
