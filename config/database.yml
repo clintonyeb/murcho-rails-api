@@ -85,6 +85,6 @@ test:
 #
 production:
   <<: *default
-  database: api_production
-  username: api
+  database: murcho-dev.cgvj840s3gpg.us-east-2.rds.amazonaws.com
+  username: <%= ENV['API_DATABASE_USERNAME'] %>
   password: <%= ENV['API_DATABASE_PASSWORD'] %>
