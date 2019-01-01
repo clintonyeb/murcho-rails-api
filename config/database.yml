@@ -85,8 +85,8 @@ test:
 #
 production:
   <<: *default
-  username: <%= ENV['API_DATABASE_USERNAME'] %>
-  password: <%= ENV['API_DATABASE_PASSWORD'] %>
-  database: murcho-dev
-  port: 5432
-  host: murcho-dev.cgvj840s3gpg.us-east-2.rds.amazonaws.com
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  database: <%= ENV['RDS_DB_NAME'] %>
+  port: <%= ENV['RDS_PORT'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
