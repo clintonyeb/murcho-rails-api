@@ -48,12 +48,12 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Custom Gems
 
 # JWT JSON Encoding
-gem 'jwt'
-# Cloud Storage S3
-gem 'aws-sdk-s3', '~> 1'
-gem 'twilio-ruby', '~> 5.16.0'
-gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
-gem 'sidekiq'
-gem "roo", "~> 2.7.0"
-gem 'rrule'
-gem "rack-timeout"
+# gem 'jwt'
+# # Cloud Storage S3
+# gem 'aws-sdk-s3', '~> 1'
+# gem 'twilio-ruby', '~> 5.16.0'
+# gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
+# gem 'sidekiq'
+# gem "roo", "~> 2.7.0"
+# gem 'rrule'
+# gem "rack-timeout"
