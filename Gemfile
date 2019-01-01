@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
-# git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-# ruby '2.5.3'
+ruby '2.5.3'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '~> 5.2.0'
@@ -48,12 +48,12 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 # Custom Gems
 
 # JWT JSON Encoding
-# gem 'jwt'
-# # Cloud Storage S3
-# gem 'aws-sdk-s3', '~> 1'
-# gem 'twilio-ruby', '~> 5.16.0'
-# gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
-# gem 'sidekiq'
-# gem "roo", "~> 2.7.0"
-# gem 'rrule'
-# gem "rack-timeout"
+gem 'jwt'
+gem 'aws-sdk-s3', '~> 1'
+gem 'twilio-ruby', '~> 5.16.0'
+gem 'xml-simple', '~> 1.1', '>= 1.1.5'
+gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
+gem 'sidekiq'
+gem "roo", "~> 2.7.0"
+gem 'rrule'
+gem "rack-timeout"
