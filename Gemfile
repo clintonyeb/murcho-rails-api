@@ -51,7 +51,6 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'jwt'
 gem 'aws-sdk-s3', '~> 1'
 gem 'twilio-ruby', '~> 5.16.0'
-gem 'xml-simple', '~> 1.1', '>= 1.1.5'
 gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
 gem 'sidekiq'
 gem "roo", "~> 2.7.0"
