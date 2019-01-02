@@ -55,4 +55,4 @@ gem 'sidekiq'
 gem "roo", "~> 2.7.0"
 gem 'rrule'
 gem "rack-timeout"
-gem 'faker', '~> 1.6', '>= 1.6.6'
+gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
