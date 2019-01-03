@@ -1,8 +1,9 @@
 Rails.application.routes.draw do
+  root :to => 'home#index'
+
   namespace :v1 do
 
     # Resources
-    
     resources :churches
     resources :users
     resources :person_profiles
