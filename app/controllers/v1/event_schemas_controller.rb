@@ -152,7 +152,7 @@ class V1::EventSchemasController < V1::BaseController
 
   def get_events_density_stats
     interval = params[:interval] || 'month'
-    count = params[:count] || 19
+    count = params[:count].to_i || 19
 
     end_date = Time.now
     start_date = count.send(interval).ago

@@ -148,7 +148,7 @@ class V1::PeopleController < V1::BaseController
 
   def get_people_stats
     interval = params[:interval] || 'month'
-    count = params[:count] || 19
+    count = params[:count].to_i || 19
 
     end_date = Time.now
     start_date = count.send(interval).ago

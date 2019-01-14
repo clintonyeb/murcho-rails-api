@@ -47,7 +47,7 @@ class V1::UsersController < V1::BaseController
 
   def get_actions_stats
     interval = params[:interval] || 'month'
-    count = params[:count] || 19
+    count = params[:count].to_i || 19
 
     end_date = Time.now
     start_date = count.send(interval).ago
