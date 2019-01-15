@@ -1,6 +1,6 @@
 class V1::ChurchesController < V1::BaseController
   before_action :set_church, only: [:show, :update, :destroy]
-  skip_before_action :authenticate_request!, :only => [:create]
+  skip_before_action :authenticate_request!, :only => [:create, :local_churches, :delete_local_church, :show]
 
   # GET /churches
   def index
@@ -47,6 +47,17 @@ class V1::ChurchesController < V1::BaseController
     render json: {church: church, members: members_count, guests: guests_count} 
   end
 
+  def local_churches
+    churches = Church.where(head_office_id: params[:church_id])
+    render json: churches
+  end
+
+  def delete_local_church
+    church = Church.find(params[:church_id])
+    church.destroy
+    render json: church
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_church
@@ -55,6 +66,6 @@ class V1::ChurchesController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def church_params
-      params.require(:church).permit(:name, :location, :photo, :motto, :trash)
+      params.require(:church).permit(:name, :location, :photo, :motto, :trash, :head_office_id)
     end
 end

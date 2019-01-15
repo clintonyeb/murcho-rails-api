@@ -43,6 +43,10 @@ Rails.application.routes.draw do
     get 'upcoming_events', to: 'event_schemas#upcoming_events'
     get 'get_events_for_group/:group_id', to: 'event_schemas#get_events_for_group'
     get 'get_church_info/:church_id', to: 'churches#church_info'
+    get 'get_local_churches/:church_id', to: 'churches#local_churches'
+
+    # DELETE routes
+    delete 'delete_local_church/:church_id', to: 'churches#delete_local_church'
 
     # Updates
     get 'get_people_updates', to: 'people#get_updates'
