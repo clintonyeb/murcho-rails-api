@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  <link rel="stylesheet" type="text/css" href="assets/styles.css">
+</head>
+
+<body>
+  <img src="https://s3.ap-south-1.amazonaws.com/murch-assets/murcho_color.png" alt="Murch Logo" class="h-10">
+
+  <h2>Confirm your email address</h2>
+
+  <p>Hi there,</p>
+
+  <p>
+    Let's make sure that this is the right email address for you. Please click on the button below to confirm your
+    email.
+  </p>
+
+  <a href="<%= @root_url %>/validate_email/<%= @user.email_confirmed_token %>" class="no-underline text-white">
+    <button class="cursor-pointer inline-flex items-center justify-center p-1 px-3 bg-blue rounded-sm text-white shadow-md">
+      CONFIRM EMAIL
+    </button>
+  </a>
+
+  <p>Thanks,</p>
+  <p lass="text-blue">Murcho Team.</p>
+</body>
+
+</html>

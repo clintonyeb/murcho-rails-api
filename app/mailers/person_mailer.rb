@@ -1,4 +1,6 @@
 class PersonMailer < ApplicationMailer
+  include Roadie::Rails::Mailer
+
   def send_mail
     people = Person.where("church_id = ? AND id IN (?) AND email IS NOT NULL", params[:church_id], params[:person_ids]).select(:id, :email) 
   
@@ -17,5 +19,36 @@ class PersonMailer < ApplicationMailer
     logger.info "Processed #{count} people out of #{params[:person_ids].length}"
     count 
 
+  end
+
+  def send_confirmation_email
+    @user = params[:user]
+    subject = "Confirm your email - Murcho Platform"
+    @root_url = ENV['FRONT_END']
+
+    roadie_mail(to: @user[:email], subject: subject)
+  end
+
+  def send_password_reset
+    @user = params[:user]
+    subject = "Reset Your Password - Murcho Platform"
+    @root_url = ENV['FRONT_END']
+
+    roadie_mail(to: @user[:email], subject: subject)
+  end
+
+  def password_reset_confirmation
+    @user = params[:user]
+    subject = "Password Reset Successful - Murcho Platform"
+
+    roadie_mail(to: @user[:email], subject: subject)
+  end
+
+  def send_welcome
+    @user = params[:user]
+    subject = "Welcome! - Murcho Platform"
+    @root_url = ENV['FRONT_END']
+
+    roadie_mail(to: @user[:email], subject: subject)
   end
 end

@@ -13,7 +13,8 @@ user = User.create!({
 	email: "admin@murcho.com",
 	access_level: :super_admin,
 	password: "12312312",
-	church_id: church.id
+	church_id: church.id,
+	email_confirmed: true
 })
 
 50.times do

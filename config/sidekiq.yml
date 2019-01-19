@@ -4,5 +4,6 @@ staging:
 production:
   :concurrency: 20
 :queues:
+  - mailer
   - mailers
   - default

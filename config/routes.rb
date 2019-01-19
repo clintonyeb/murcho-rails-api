@@ -31,6 +31,9 @@ Rails.application.routes.draw do
     post 'group_send_sms', to: 'groups#send_sms'
     post 'group_bulk_export', to: 'groups#bulk_export'
     post 'add_event_to_groups', to: 'event_schemas#add_event_to_groups'
+    post 'confirm_email', to: 'users#confirm_email'
+    post 'forgot_password', to: 'users#forgot_password'
+    post 'reset_password', to: 'users#reset_password'
 
     # GET routes
     get 'total_people', to: 'people#total_people'

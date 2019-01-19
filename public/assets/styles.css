@@ -1,0 +1,151 @@
+*,
+::before,
+::after {
+  border-width: 0;
+  border-style: solid;
+  border-color: #dae1e7;
+}
+
+*,
+::before,
+::after {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit;
+}
+
+* {
+  outline: none !important;
+}
+
+.w-32 {
+  width: 8rem;
+}
+
+.text-grey {
+  color: grey;
+}
+
+.text-white {
+  color: #fff;
+}
+
+.shadow-md {
+  -webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .12), 0 2px 4px 0 rgba(0, 0, 0, .08);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .12), 0 2px 4px 0 rgba(0, 0, 0, .08);
+}
+
+.p-2 {
+  padding: 1rem;
+}
+
+.px-4 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.p-1 {
+  padding: .5rem;
+}
+
+.px-3 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+
+.h-12 {
+  height: 3rem;
+}
+
+.justify-center {
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.items-center {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.inline-flex {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+}
+
+.rounded-sm {
+  border-radius: .125rem;
+}
+
+.bg-blue {
+  background-color: #3490dc;
+}
+
+.text-blue {
+  color: #3490dc;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+}
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+button {
+  background: transparent;
+  background-color: transparent;
+  padding: 0;
+}
+
+button,
+select {
+  text-transform: none;
+}
+
+button,
+input {
+  overflow: visible;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
+}
+
+.lg\:text-right {
+  text-align: right;
+}
+
+.no-underline {
+  text-decoration: none;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.font-medium {
+  font-weight: bolder;
+}
+
+.italics {
+  font-style: italic;
+}
+
+.text-xs {
+  font-size: .8rem;
+}

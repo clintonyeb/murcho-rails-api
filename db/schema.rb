@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_31_132254) do
+ActiveRecord::Schema.define(version: 2019_01_18_163452) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,6 +130,12 @@ ActiveRecord::Schema.define(version: 2018_12_31_132254) do
     t.boolean "trash", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email_confirmed_token"
+    t.boolean "email_confirmed", default: false
+    t.datetime "email_confrimed_at"
+    t.datetime "email_confirmed_sent_at"
+    t.string "reset_password_token"
+    t.datetime "reset_password_created_at"
   end
 
   add_foreign_key "event_exceptions", "event_schemas"

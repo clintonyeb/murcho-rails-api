@@ -1,0 +1,11 @@
+development:
+  host: localhost
+  port: 6379
+
+test:
+  host: localhost
+  port: 6379
+
+production:
+  host: background-jobs-001.t19dna.0001.use1.cache.amazonaws.com
+  port: 6379
