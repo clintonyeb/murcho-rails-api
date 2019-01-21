@@ -1,9 +1,5 @@
-if Rails.env.development?
+if not Rails.env.production?
   ENV['FRONT_END'] = 'http://localhost:8080'
-end
-
-if Rails.env.production?
-  ENV['FRONT_END'] = 'https://murcho.com'
 end
 
 # Load the Rails application.
