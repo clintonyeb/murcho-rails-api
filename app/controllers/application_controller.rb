@@ -33,6 +33,28 @@ class ApplicationController < ActionController::API
       User.access_levels[@current_user.access_level] <= User.access_levels[level]
     end
 
+    def verify_recaptcha(token)
+      require 'net/http'
+      require 'uri'
+      require 'json'
+      
+      data = {
+        secret: Rails.application.secrets.CAPTCHA_SECRET_KEY,
+        response: token,
+        remoteip: request.remote_ip
+      }
+
+      uri = URI.parse('https://www.google.com/recaptcha/api/siteverify')
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true
+      request = Net::HTTP::Post.new(uri.request_uri)
+      request.set_form_data(data)
+
+      # Send the request
+      response = http.request(request)
+      return JSON.parse response.body
+    end
+
   private
     def payload
       auth_header = request.headers['Authorization']

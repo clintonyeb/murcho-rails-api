@@ -18,6 +18,13 @@ class V1::ChurchesController < V1::BaseController
   def create
     @church = Church.new(church_params)
 
+    if params[:'g-recaptcha-response'].present?
+      response = verify_recaptcha(params[:'g-recaptcha-response'])
+      if not response["success"]
+        return (render json: { error: 'Could not verify captcha' }, status: :unprocessable_entity)
+      end
+    end
+
     if @church.save
       render json: @church, status: :created
     else
@@ -66,6 +73,6 @@ class V1::ChurchesController < V1::BaseController
 
     # Only allow a trusted parameter "white list" through.
     def church_params
-      params.require(:church).permit(:name, :location, :photo, :motto, :trash, :head_office_id)
+      params.require(:church).permit(:name, :location, :photo, :motto, :trash, :head_office_id, :'g-recaptcha-response')
     end
 end

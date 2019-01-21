@@ -1,6 +1,6 @@
 class V1::UsersController < V1::BaseController
   before_action :set_user, only: [:show, :update, :destroy]
-  skip_before_action :authenticate_request!, :only => [:create, :forgot_password, :reset_password, :confirm_email]
+  skip_before_action :authenticate_request!, :only => [:create, :forgot_password, :reset_password, :confirm_email, :test]
 
   # GET /users
   def index
@@ -124,6 +124,10 @@ class V1::UsersController < V1::BaseController
       render json: {error: "Token has expired. Please request new password reset link"}, status: :unprocessable_entity
     end
     
+  end
+
+  def test
+    # render json: verify_recaptcha(params[:token])
   end
 
   private

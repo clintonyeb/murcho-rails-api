@@ -47,6 +47,7 @@ Rails.application.routes.draw do
     get 'get_events_for_group/:group_id', to: 'event_schemas#get_events_for_group'
     get 'get_church_info/:church_id', to: 'churches#church_info'
     get 'get_local_churches/:church_id', to: 'churches#local_churches'
+    # get 'test', to: 'users#test'
 
     # DELETE routes
     delete 'delete_local_church/:church_id', to: 'churches#delete_local_church'
