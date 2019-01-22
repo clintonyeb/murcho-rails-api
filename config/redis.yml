@@ -7,5 +7,5 @@ test:
   port: 6379
 
 production:
-  host: background-jobs-001.t19dna.0001.use1.cache.amazonaws.com
+  host: scheduler.iaugf7.ng.0001.use2.cache.amazonaws.com
   port: 6379
