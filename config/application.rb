@@ -38,5 +38,11 @@ module Api
     config.active_job.queue_adapter = :sidekiq
 
     config.allow_concurrency = true
+
+    # Cookies/Session Management
+    config.action_controller.forgery_protection_origin_check = false
+    
+    config.middleware.use ActionDispatch::Cookies
+    config.middleware.use ActionDispatch::Session::CookieStore
   end
 end

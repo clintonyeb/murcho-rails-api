@@ -1,8 +1,13 @@
-class ApplicationController < ActionController::API
-  before_action :authenticate_request!
+class ApplicationController < ActionController::Base
+  before_action :authenticate_request!, :set_csrf_cookie
   attr_reader :current_user
   
   protected
+
+    def set_csrf_cookie
+      cookies["CSRF-TOKEN"] = form_authenticity_token
+    end
+
     def authenticate_request!
       if !payload || !JsonWebToken.valid_payload(payload.first)
         return invalid_authentication

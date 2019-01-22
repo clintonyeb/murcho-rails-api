@@ -16,6 +16,7 @@ Rails.application.routes.draw do
     
     # POST routes
     post 'authentication', to: 'authentication#create'
+    post 'session', to: 'authentication#session'
     post 'get_user_info', to: 'users#get_user_info'
     post 'add_person_to_group', to: 'people#add_person_to_group'
     post 'add_people_to_groups', to: 'people#add_people_to_groups'
