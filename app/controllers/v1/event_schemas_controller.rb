@@ -48,7 +48,7 @@ class V1::EventSchemasController < V1::BaseController
       end
       render json: results, status: :created
     else
-      render json: @event_schema.errors, status: :unprocessable_entity
+      render json: {error: @event_schema.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -57,7 +57,7 @@ class V1::EventSchemasController < V1::BaseController
     if @event_schema.update(event_schema_params)
       render json: @event_schema
     else
-      render json: @event_schema.errors, status: :unprocessable_entity
+      render json: {error: @event_schema.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -83,7 +83,7 @@ class V1::EventSchemasController < V1::BaseController
     if new_event.save
       render json: {status: true}, status: :created
     else
-      render json: new_event.errors, status: :unprocessable_entity
+      render json: {error: new_event.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 

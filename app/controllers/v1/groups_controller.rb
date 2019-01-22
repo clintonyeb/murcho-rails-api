@@ -26,7 +26,7 @@ class V1::GroupsController < V1::BaseController
     if @group.save
       render json: @group, status: :created
     else
-      render json: @group.errors, status: :unprocessable_entity
+      render json: {error: @group.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -35,7 +35,7 @@ class V1::GroupsController < V1::BaseController
     if @group.update(group_params)
       render json: @group
     else
-      render json: @group.errors, status: :unprocessable_entity
+      render json: {error: @group.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 

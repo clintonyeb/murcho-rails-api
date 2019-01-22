@@ -28,7 +28,7 @@ class V1::ChurchesController < V1::BaseController
     if @church.save
       render json: @church, status: :created
     else
-      render json: @church.errors, status: :unprocessable_entity
+      render json: {error: @church.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -37,7 +37,7 @@ class V1::ChurchesController < V1::BaseController
     if @church.update(church_params)
       render json: @church
     else
-      render json: @church.errors, status: :unprocessable_entity
+      render json: {error: @church.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 

@@ -20,7 +20,7 @@ class V1::PersonProfilesController < V1::BaseController
     if @person_profile.save
       render json: @person_profile, status: :created
     else
-      render json: @person_profile.errors, status: :unprocessable_entity
+      render json: {error: @person_profile.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -29,7 +29,7 @@ class V1::PersonProfilesController < V1::BaseController
     if @person_profile.update(person_profile_params)
       render json: @person_profile
     else
-      render json: @person_profile.errors, status: :unprocessable_entity
+      render json: {error: @person_profile.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 

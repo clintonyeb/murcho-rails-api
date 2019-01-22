@@ -13,11 +13,11 @@ class ApplicationController < ActionController::API
     end
 
     def invalid_authentication
-      render json: {error: 'Invalid Request'}, status: :unauthorized
+      render json: {error: 'Could not authenticate your request.'}, status: :unauthorized
     end
 
     def invalid_authorization
-      render json: {error: 'Not Authorized'}, status: :unauthorized
+      render json: {error: 'You are not authorized to perform your request.'}, status: :unauthorized
 
     end
 
@@ -34,25 +34,14 @@ class ApplicationController < ActionController::API
     end
 
     def verify_recaptcha(token)
-      require 'net/http'
-      require 'uri'
-      require 'json'
-      
+      url = 'https://www.google.com/recaptcha/api/siteverify'      
       data = {
         secret: Rails.application.secrets.CAPTCHA_SECRET_KEY,
         response: token,
         remoteip: request.remote_ip
       }
-
-      uri = URI.parse('https://www.google.com/recaptcha/api/siteverify')
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.use_ssl = true
-      request = Net::HTTP::Post.new(uri.request_uri)
-      request.set_form_data(data)
-
-      # Send the request
-      response = http.request(request)
-      return JSON.parse response.body
+      
+      Http.make_https_request(url, data)
     end
 
   private

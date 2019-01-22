@@ -27,7 +27,7 @@ class V1::PeopleController < V1::BaseController
       render json: @person, :include => {:groups => {:only => [:id, :name]}}, status: :created
       ThumbnailJob.perform_later(@person.id)
     else
-      render json: @person.errors, status: :unprocessable_entity
+      render json: {error: @person.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -37,7 +37,7 @@ class V1::PeopleController < V1::BaseController
       render json: @person, :include => {:groups => {:only => [:id, :name]}}
       ThumbnailJob.perform_later(@person.id)
     else
-      render json: @person.errors, status: :unprocessable_entity
+      render json: {error: @person.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -58,7 +58,7 @@ class V1::PeopleController < V1::BaseController
       person = Person.find_by(id: params[:person_id])
       render json: person, status: :created
     else
-      render json: person_group.errors, status: :unprocessable_entity
+      render json: {error: person_group.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -153,10 +153,6 @@ class V1::PeopleController < V1::BaseController
     end_date = Time.now
     start_date = count.send(interval).ago
     interval_value = "1 #{interval}"
-
-    logger.debug(start_date)
-    logger.debug(end_date)
-    puts "kjsadksbdambdamsabmdbasmbsamna"
 
     label_query = "
     SELECT generate_series(timestamp ?, timestamp ?, interval ?) AS labels ORDER  BY 1;

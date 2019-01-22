@@ -22,7 +22,7 @@ class V1::UsersController < V1::BaseController
       PersonMailer.with(user: @user).send_confirmation_email.deliver_later
       render json: @user, status: :created
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: {error:  @user.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -31,7 +31,7 @@ class V1::UsersController < V1::BaseController
     if @user.update(user_params)
       render json: @user
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: {error:  @user.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -118,7 +118,7 @@ class V1::UsersController < V1::BaseController
         PersonMailer.with(user: user).password_reset_confirmation.deliver_later
         render json: {status: 'ok'}, status: :ok
       else
-        render json: {error: user.errors.full_messages}, status: :unprocessable_entity
+        render json: {error: user.errors.full_messages.first}, status: :unprocessable_entity
       end
     else
       render json: {error: "Token has expired. Please request new password reset link"}, status: :unprocessable_entity

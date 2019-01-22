@@ -26,7 +26,7 @@ class V1::EventExceptionsController < V1::BaseController
     if event_exception.save
       render json: event_exception, status: :created
     else
-      render json: event_exception.errors, status: :unprocessable_entity
+      render json: {error: event_exception.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
@@ -35,7 +35,7 @@ class V1::EventExceptionsController < V1::BaseController
     if @event_exception.update(event_exception_params)
       render json: @event_exception
     else
-      render json: @event_exception.errors, status: :unprocessable_entity
+      render json: {error: @event_exception.errors.full_messages.first}, status: :unprocessable_entity
     end
   end
 
