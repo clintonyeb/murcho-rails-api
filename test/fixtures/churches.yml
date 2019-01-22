@@ -1,15 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
+<% require 'faker' %>
 one:
-  name: MyString
-  location: MyString
-  photo: MyString
-  motto: MyString
+  name: <% Faker::Coffee.blend_name %>
+  location: <% Faker::Coffee.origin %>
+  photo: https://s3.ap-south-1.amazonaws.com/murch-assets/pentecost_logo.jpg
+  motto: <% Faker::Movies::Hobbit.quote %>
   trash: false
 
 two:
-  name: MyString
-  location: MyString
-  photo: MyString
-  motto: MyString
+  name: <% Faker::Coffee.blend_name %>
+  location: <% Faker::Coffee.origin %>
+  photo: https://s3.ap-south-1.amazonaws.com/murch-assets/pentecost_logo.jpg
+  motto: <% Faker::Movies::Hobbit.quote %>
   trash: false

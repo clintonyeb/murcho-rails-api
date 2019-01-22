@@ -1,4 +1,5 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+# require 'faker'
 
 one:
   photo: MyString
@@ -10,6 +11,12 @@ one:
   salt: MyString
   full_name: MyString
   trash: false
+  email_confirmed_token: 12354567
+  email_confirmed: false
+  email_confrimed_at: 2018-11-29
+  email_confirmed_sent_at: 2018-11-29
+  reset_password_token: 123456
+  reset_password_created_at: 2018-11-29
 
 two:
   photo: MyString
@@ -21,3 +28,28 @@ two:
   salt: MyString
   full_name: MyString
   trash: false
+  email_confirmed_token: 12354567
+  email_confirmed: false
+  email_confrimed_at: 2018-11-29
+  email_confirmed_sent_at: 2018-11-29
+  reset_password_token: 123456
+  reset_password_created_at: 2018-11-29
+
+<% 1000.times do |n| %>
+user_<%= n %>:
+  photo: Faker::Name.name
+  phone_number: Faker::PhoneNumber.phone_number
+  email: Faker::Internet.email
+  access_level: 1
+  church_id: one
+  password_digest: Faker::Internet.password
+  salt: Faker::Internet.slug
+  full_name: Faker::Name.name
+  trash: false
+  email_confirmed_token: Faker::Internet.slug
+  email_confirmed: false
+  email_confrimed_at: 2018-11-29
+  email_confirmed_sent_at: 2018-11-29
+  reset_password_token: Faker::Internet.slug
+  reset_password_created_at: 2018-11-29
+<% end %>

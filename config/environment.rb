@@ -1,7 +1,3 @@
-if not Rails.env.production?
-  ENV['FRONT_END'] = 'http://localhost:8080'
-end
-
 # Load the Rails application.
 require_relative 'application'
 

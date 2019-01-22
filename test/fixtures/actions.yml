@@ -2,12 +2,10 @@
 
 one:
   type: 1
-  recipients: 
-  recipients_type: 1
+  recipient: 
   status: 1
 
 two:
   type: 1
-  recipients: 
-  recipients_type: 1
+  recipient: 
   status: 1

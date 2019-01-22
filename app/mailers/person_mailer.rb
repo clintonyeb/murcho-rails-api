@@ -24,7 +24,7 @@ class PersonMailer < ApplicationMailer
   def send_confirmation_email
     @user = params[:user]
     subject = "Confirm your email - Murcho Platform"
-    @root_url = ENV['FRONT_END']
+    @root_url = Rails.application.secrets.FRONT_END
 
     roadie_mail(to: @user[:email], subject: subject)
   end
@@ -32,7 +32,7 @@ class PersonMailer < ApplicationMailer
   def send_password_reset
     @user = params[:user]
     subject = "Reset Your Password - Murcho Platform"
-    @root_url = ENV['FRONT_END']
+    @root_url = Rails.application.secrets.FRONT_END
 
     roadie_mail(to: @user[:email], subject: subject)
   end
@@ -47,7 +47,7 @@ class PersonMailer < ApplicationMailer
   def send_welcome
     @user = params[:user]
     subject = "Welcome! - Murcho Platform"
-    @root_url = ENV['FRONT_END']
+    @root_url = Rails.application.secrets.FRONT_END
 
     roadie_mail(to: @user[:email], subject: subject)
   end
