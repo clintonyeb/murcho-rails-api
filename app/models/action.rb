@@ -1,5 +1,5 @@
 class Action < ApplicationRecord
-  enum type: [:email, :sms]
+  enum action_type: [:email, :sms]
   enum recipients_type: [:people]
   enum status: [:success, :failed]
 end

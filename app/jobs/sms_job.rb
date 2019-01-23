@@ -8,7 +8,7 @@ class SmsJob < ApplicationJob
     people.each do |person|
       SMSService.send_sms(person[:phone_number], message)
       Action.create({
-        type: :sms,
+        action_type: :sms,
         recipient: person[:id],
         status: :success
       })

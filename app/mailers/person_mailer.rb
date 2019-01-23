@@ -1,5 +1,6 @@
 class PersonMailer < ApplicationMailer
   include Roadie::Rails::Mailer
+  include SendGrid
 
   def send_mail
     people = Person.where("church_id = ? AND id IN (?) AND email IS NOT NULL", params[:church_id], params[:person_ids]).select(:id, :email) 
@@ -9,7 +10,7 @@ class PersonMailer < ApplicationMailer
       @message = params[:message]
       mail(to: person[:email], subject: params[:subject])
       Action.create({
-        type: :email,
+        action_type: :email,
         recipient: person[:id],
         status: :success
       })

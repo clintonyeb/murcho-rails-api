@@ -1,3 +1,5 @@
+gem 'dotenv-rails', groups: [:development, :test]
+
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
@@ -49,10 +51,11 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem 'jwt'
 gem 'aws-sdk-s3', '~> 1'
 gem 'twilio-ruby', '~> 5.16.0'
-gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
+# gem "aws-ses", "~> 0.6.0", :require => 'aws/ses'
 gem 'sidekiq'
 gem "roo", "~> 2.7.0"
 gem 'rrule'
 gem "rack-timeout"
 gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
 gem 'roadie-rails', :github => 'Mange/roadie-rails', :branch => 'master'
+gem 'sendgrid-ruby'

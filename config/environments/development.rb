@@ -53,6 +53,6 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
 
   # Configure Amazon AWS For sending mails
-  config.action_mailer.delivery_method = :ses
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
 end
