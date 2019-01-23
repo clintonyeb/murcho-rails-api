@@ -34,6 +34,7 @@ Rails.application.routes.draw do
     post 'confirm_email', to: 'users#confirm_email'
     post 'forgot_password', to: 'users#forgot_password'
     post 'reset_password', to: 'users#reset_password'
+    post 'app_feedback', to: 'people#app_feedback'
 
     # GET routes
     get 'total_people', to: 'people#total_people'

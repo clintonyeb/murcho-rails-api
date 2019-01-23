@@ -1,0 +1,2 @@
+class AppFeedback < ApplicationRecord
+end

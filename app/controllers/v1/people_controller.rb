@@ -1,6 +1,7 @@
 class V1::PeopleController < V1::BaseController
   before_action :set_person, only: [:show, :update, :destroy]
   before_action :set_pagination, only: [:index, :get_people_for_group, :search_people, :filter_search_people, :get_people_with_filter]
+  skip_before_action :authenticate_request!, :only => [:app_feedback]
 
   # GET /people
   def index
@@ -174,6 +175,16 @@ class V1::PeopleController < V1::BaseController
     former_series = Person.find_by_sql([series_query, start_date, end_date, interval_value, interval_value, Person.membership_statuses[:former]]).pluck(:events)
 
     render json: {labels: labels, series: [member_series, guest_series, former_series], interval: interval, count: count, start_date: start_date, end_date: end_date}
+  end
+
+  def app_feedback
+    app_feedback = AppFeedback.new(email: params[:email])
+
+    if app_feedback.save
+      render json: {success: true}, status: :ok
+    else
+      render json: {error: "Error adding your feedback."}, status: :unprocessable_entity
+    end
   end
   
   private
