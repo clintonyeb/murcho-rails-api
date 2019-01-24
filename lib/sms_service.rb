@@ -3,12 +3,23 @@ class SMSService
   
   def self.send_sms(to, body)
     @client ||= setup
-
-    @client.api.account.messages.create(
-      from: @phone_number,
-      to: to,
-      body: body
-    )
+    begin
+      @client.api.account.messages.create(
+        from: @sender_id,
+        to: to,
+        body: body
+      )
+    rescue Twilio::REST::RequestError => error
+      if error.code == 21612
+        client.messages.create(
+          from: @phone_number,
+          to:   to,
+          body: body
+        )
+      else
+        raise error
+      end
+    end
   end
 
   private
@@ -20,6 +31,7 @@ class SMSService
     # puts account_sid
 
     @phone_number = Rails.application.secrets.TWILIO_PHONE_NUMBER
+    @sender_id = Rails.application.secrets.TWILIO_ALPHANUMERIC_ID
     @client = Twilio::REST::Client.new account_sid, auth_token
   end
 end
