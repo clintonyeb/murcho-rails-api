@@ -11,7 +11,7 @@ class SMSService
       )
     rescue Twilio::REST::RestError => error
       if error.code == 21612
-        client.messages.create(
+        @client.messages.create(
           from: @phone_number,
           to:   to,
           body: body
