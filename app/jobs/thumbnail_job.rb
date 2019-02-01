@@ -2,12 +2,12 @@ class ThumbnailJob < ApplicationJob
   queue_as :default
 
   def perform(person_id)
-    person = Person.find(person_id)
+    person_details = PersonDetail.find_by(person_id: person_id)
 
-    person.photo.blank? and return false
+    person_details.photo.blank? and return false
     
     # Download file
-    file_path = CloudStorage.download_file(person.photo,  'photos')
+    file_path = CloudStorage.download_file(person_details.photo,  'photos')
     # if file_path.blank? raise "could not download file"
 
     # Use Convert to resize it
@@ -18,6 +18,7 @@ class ThumbnailJob < ApplicationJob
     CloudStorage.upload_file(file_path, thumbnail_file)
 
     # Save new url as thumbnail
+    person = Person.find(person_id)
     person.update(thumbnail: CloudStorage.get_aws_url(thumbnail_file))
 
     # Delete photo

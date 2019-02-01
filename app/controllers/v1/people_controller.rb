@@ -5,7 +5,7 @@ class V1::PeopleController < V1::BaseController
 
   # GET /people
   def index
-    @people = Person.includes(:groups).where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort)
+    @people = Person.includes(:groups).joins("LEFT JOIN person_details ON people.id = person_details.person_id").where(church_id: @current_user.church_id).offset(@offset).limit(@size).order(@order => @sort).select("people.*, email, cell_phone_1")
     render json: @people, :include => {:groups => {:only => [:id, :name]}}
   end
 
@@ -26,7 +26,6 @@ class V1::PeopleController < V1::BaseController
 
     if @person.save
       render json: @person, :include => {:groups => {:only => [:id, :name]}}, status: :created
-      ThumbnailJob.perform_later(@person.id)
     else
       render json: {error: @person.errors.full_messages.first}, status: :unprocessable_entity
     end
@@ -77,7 +76,7 @@ class V1::PeopleController < V1::BaseController
   def filter_search_people
     search_query = "#{params[:query]}%"
 
-    people = Person.includes(:groups).where("people.church_id = ? AND (LOWER(first_name) LIKE (?) OR LOWER(last_name) LIKE (?))", @current_user.church_id, search_query, search_query).offset(@offset).limit(@size).order(@order => @sort)
+    people = Person.includes(:groups).joins("LEFT JOIN person_details ON people.id = person_details.person_id").where("people.church_id = ? AND (LOWER(first_name) LIKE (?) OR LOWER(last_name) LIKE (?))", @current_user.church_id, search_query, search_query).offset(@offset).limit(@size).order(@order => @sort).select("people.*, email, cell_phone_1")
     
     render json: people, :include => {:groups => {:only => [:id, :name]}}
   end
@@ -99,7 +98,7 @@ class V1::PeopleController < V1::BaseController
     person_group = PersonGroup.find_by(person_id: params[:person_id], group_id: params[:group_id])
     person_group.destroy
     
-    person = Person.find(params[:person_id])
+    person = Person.joins("LEFT JOIN person_details ON people.id = person_details.person_id").find(params[:person_id]).select("people.*, email, cell_phone_1")
     render json: person, :include => {:groups => {:only => [:id, :name]}}
   end
 
@@ -138,7 +137,7 @@ class V1::PeopleController < V1::BaseController
     filters = params[:filters]
     query, data = build_filter_query(filters)
 
-    @people = Person.includes(:groups).where(query, *data).offset(@offset).limit(@size).order(@order => @sort)
+    @people = Person.includes(:groups).joins("LEFT JOIN person_details ON people.id = person_details.person_id").where(query, *data).offset(@offset).limit(@size).order(@order => @sort).select("people.*, email, cell_phone_1")
     render json: @people, :include => {:groups => {:only => [:id, :name]}}
   end
 
@@ -186,6 +185,24 @@ class V1::PeopleController < V1::BaseController
       render json: {error: "Error adding your feedback."}, status: :unprocessable_entity
     end
   end
+
+  def update_person_details
+    person_detail = PersonDetail.find_or_create_by(person_id: params[:person_id])
+    if person_detail.update(person_details_params)
+      if params[:photo]
+        ThumbnailJob.perform_later(params[:person_id])
+      end
+
+      render json: {success: true}, status: :ok
+    else
+      render json: {error: person_detail.errors.full_messages.first}, status: :unprocessable_entity
+    end
+  end
+
+  def get_person_details
+    person_detail = PersonDetail.find_or_create_by(person_id: params[:person_id])
+    render json: person_detail
+  end
   
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -198,12 +215,16 @@ class V1::PeopleController < V1::BaseController
       params.require(:person).permit(:first_name, :last_name, :photo, :phone_number, :email, :membership_status, :church_id, :trash, :date_joined, :people, :groups, :person_id, :group_id, :thumbnail, :people_ids, :export_format, :filters, :file_url)
     end
 
+    def person_details_params
+      params.permit(:person_id, :other_names, :date_of_birth, :place_of_birth, :age, :day_born, :gender, :house_number, :street_name, :location, :hometown, :hometown_address, :education_level, :occupation, :cell_phone_1, :cell_phone_2, :email, :photo, :date_of_baptism, :place_of_baptism, :pastor_or_ministry,:confirmation_date, :place_of_confirmation, :communicant_status, :generational_group, :interest_group, :special_interests, :position_in_church,:church_position_period, :name_of_mother, :name_of_father, :marital_status, :name_of_spouse, :spouse_contact, :names_of_children)
+    end
+
     def build_filter_query(filters)
       data = []
       query = "true "
 
       filters[:fields].each do |field|
-        query += "AND people.#{field} IS NOT NULL "
+        query += "AND (NOT(person_details.#{field} IS NULL OR person_details.#{field} = ''))"
       end
 
       if filters[:date_joined][:start_joined].present?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_01_23_191854) do
+ActiveRecord::Schema.define(version: 2019_02_01_000508) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,9 +90,6 @@ ActiveRecord::Schema.define(version: 2019_01_23_191854) do
   create_table "people", force: :cascade do |t|
     t.string "first_name"
     t.string "last_name"
-    t.string "photo"
-    t.string "phone_number"
-    t.string "email"
     t.integer "membership_status"
     t.bigint "church_id"
     t.boolean "trash", default: false
@@ -100,7 +97,49 @@ ActiveRecord::Schema.define(version: 2019_01_23_191854) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "thumbnail"
+    t.string "member_id", null: false
     t.index ["church_id"], name: "index_people_on_church_id"
+  end
+
+  create_table "person_details", force: :cascade do |t|
+    t.string "other_names"
+    t.string "date_of_birth"
+    t.string "place_of_birth"
+    t.integer "age"
+    t.string "day_born"
+    t.integer "gender"
+    t.string "house_number"
+    t.string "street_name"
+    t.string "location"
+    t.string "hometown"
+    t.string "hometown_address"
+    t.string "education_level"
+    t.string "occupation"
+    t.string "cell_phone_1"
+    t.string "cell_phone_2"
+    t.string "email"
+    t.string "photo"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "person_id"
+    t.date "date_of_baptism"
+    t.string "place_of_baptism"
+    t.string "pastor_or_ministry"
+    t.date "confirmation_date"
+    t.string "place_of_confirmation"
+    t.boolean "communicant_status"
+    t.string "generational_group"
+    t.string "interest_group"
+    t.string "special_interests"
+    t.string "position_in_church"
+    t.string "church_position_period"
+    t.string "name_of_mother"
+    t.string "name_of_father"
+    t.string "marital_status"
+    t.string "name_of_spouse"
+    t.string "spouse_contact"
+    t.string "names_of_children"
+    t.index ["person_id"], name: "index_person_details_on_person_id"
   end
 
   create_table "person_groups", force: :cascade do |t|
@@ -149,6 +188,7 @@ ActiveRecord::Schema.define(version: 2019_01_23_191854) do
   add_foreign_key "event_groups", "groups"
   add_foreign_key "groups", "churches"
   add_foreign_key "people", "churches"
+  add_foreign_key "person_details", "people"
   add_foreign_key "person_groups", "groups"
   add_foreign_key "person_groups", "people"
   add_foreign_key "person_profiles", "people"

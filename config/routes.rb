@@ -35,6 +35,7 @@ Rails.application.routes.draw do
     post 'forgot_password', to: 'users#forgot_password'
     post 'reset_password', to: 'users#reset_password'
     post 'app_feedback', to: 'people#app_feedback'
+    post 'update_person_details', to: 'people#update_person_details'
 
     # GET routes
     get 'total_people', to: 'people#total_people'
@@ -48,6 +49,7 @@ Rails.application.routes.draw do
     get 'get_events_for_group/:group_id', to: 'event_schemas#get_events_for_group'
     get 'get_church_info/:church_id', to: 'churches#church_info'
     get 'get_local_churches/:church_id', to: 'churches#local_churches'
+    get 'get_person_details/:person_id', to: 'people#get_person_details'
     # get 'test', to: 'users#test'
 
     # DELETE routes
