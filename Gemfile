@@ -57,5 +57,5 @@ gem "roo", "~> 2.7.0"
 gem 'rrule'
 gem "rack-timeout"
 gem 'faker', '~> 1.6', '>= 1.6.6'
-gem 'roadie-rails', :github => 'Mange/roadie-rails', :branch => 'master'
+gem 'roadie-rails', '~> 1.1', '>= 1.1.1'
 gem 'sendgrid-ruby'
