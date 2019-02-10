@@ -22,13 +22,17 @@ user = User.create!({
 		church_id: church.id,
 		first_name: Faker::Name.first_name,
 		last_name: Faker::Name.last_name,
-		photo: 'https://s3.ap-south-1.amazonaws.com/murch-app/simpson.jpg',
 		thumbnail: 'https://s3.ap-south-1.amazonaws.com/murch-app/simpson.jpg',
-		phone_number: Faker::PhoneNumber.unique.phone_number, # unique
-		email: Faker::Internet.unique.free_email, # unique
 		membership_status: :member,
 		date_joined: Time.now 
-  })
+	})
+	
+	personDetail = PersonDetail.create!({
+		person_id: person.id,
+		cell_phone_1: Faker::PhoneNumber.unique.phone_number, # unique
+		email: Faker::Internet.unique.free_email, # unique
+		photo: 'https://s3.ap-south-1.amazonaws.com/murch-app/simpson.jpg',
+	})
 end
 
 50.times do
